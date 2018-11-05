@@ -1,4 +1,5 @@
 linux的开发板 全志的
 单版本机控制板  stm32 
-机械手臂  uarm  robot arm 5finger 
+机械手臂  uarm  robot arm 5finger 达芬奇机器人 inmoov
+
 屏幕按键 
