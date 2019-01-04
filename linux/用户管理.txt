@@ -1,0 +1,16 @@
+adduser： 会自动为创建的用户指定主目录、系统shell版本，会在创建时输入用户密码。
+useradd：需要使用参数选项指定上述基本设置，如果不使用任何参数，则创建的用户无密码、无主目录、没有指定shell版本。
+userdel 删除用户
+/etc/passwd - 使 用 者 帐 号 资 讯，可以查看用户信息
+/etc/shadow - 使 用 者 帐 号 资 讯 加 密
+/etc/group - 群 组 资 讯
+/etc/default/useradd - 定 义 资 讯
+/etc/login.defs - 系 统 广 义 设 定
+/etc/skel - 内 含 定 义 档 的 目 录
+
+usermod 修改用户信息
+
+usermod -g 用户组 用户名
+    强制修改用户所在组
+usermod -a -G 用户组 用户名
+    把某个用户添加进某个组
