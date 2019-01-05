@@ -1,0 +1,17 @@
+安装
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose 增加执行权限
+docker-compose --version 判断有没有安装好
+
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose 可以建立软链接
+
+
+
+启动：
+ docker-compose up
+
+ 关闭
+ docker-compose stop
+
+ 删除
+ docker-compose rm

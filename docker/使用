@@ -1,0 +1,11 @@
+使用
+
+
+php镜像
+docker run --rm --name wordpress --volume "$PWD/":/var/www/html -p 9300:80 php:5.6-apache
+
+mysql镜像
+docker container run -d --rm --name wordpressdb --env MYSQL_ROOT_PASSWORD=123456 --env MYSQL_DATABASE=wordpress mysql:5.
+
+建立一个链接
+docker run --rm --name wordpress --volume "$PWD/":/var/www/html --link wordpressdb:mysql -p 9300:80 phpwithmysql

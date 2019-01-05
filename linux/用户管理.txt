@@ -14,3 +14,9 @@ usermod -g 用户组 用户名
     强制修改用户所在组
 usermod -a -G 用户组 用户名
     把某个用户添加进某个组
+
+修改密码
+passwd
+
+passwd $user
+

@@ -1,0 +1,3 @@
+su  切换用户
+
+sudo 普通用户执行root指令  需要在sudoer文件中有此用户 在 /etc/sudoers 中有出现的使用者。

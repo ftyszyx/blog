@@ -1,0 +1,16 @@
+mysql:
+    image: mysql:5.7
+    environment:
+    - MYSQL_ROOT_PASSWORD=123456
+    - MYSQL_DATABASE=wordpress
+web:
+    image: wordpress
+    links:
+    - mysql
+    environment:
+    - WORDPRESS_DB_PASSWORD=123456
+    ports:
+    - "9300:80"
+    working_dir: /var/www/html
+    volumes:
+    - wordpress:/var/www/html

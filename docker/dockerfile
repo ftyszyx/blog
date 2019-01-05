@@ -1,0 +1,5 @@
+dockerfile
+
+docker build [选项] <上下文路径/URL/->
+
+ docker build -t nginx:v3 . 

@@ -31,3 +31,29 @@ sudo docker run hello-world
 
 卸载docker ce
 sudo apt-get purge docker-ce
+
+手动启动
+dockerd
+或者设置开机自动启动
+systemctl enable docker
+systemctl disable docker
+
+
+配置镜相加速
+请在 /etc/docker/daemon.json 中写入如下内容（如果文件不存在请新建该文件）
+{
+  "registry-mirrors": [
+    "https://registry.docker-cn.com"
+  ]
+}
+
+Docker 官方提供的中国 registry mirror https://registry.docker-cn.com
+阿里云加速器(需登录账号获取) https://account.aliyun.com/login/login.htm
+七牛云加速器 https://reg-mirror.qiniu.com/
+
+之后重新启动服务。
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl restart docker
+
+docker info  查看加速器有没有生效
