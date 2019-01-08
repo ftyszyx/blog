@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+
+  app:
+    image: gogs/gogs:0.11.79
+    ports:
+      - "10022:22"
+      - "10080:3000"
+    volumes:
+      - ./gogs:/data
+    restart: always
+    links:
+        - mysql:mysql
+    environment:
+      - Domain=122.152.229.139
+      - SSH_PORT=10022
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=gogs

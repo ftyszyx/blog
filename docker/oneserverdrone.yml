@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  drone-server:
+    image: drone/drone:1.0.0-rc.3
+    ports:
+      - 8100:80
+    volumes:
+      - ./drone:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+    environment:
+      - DRONE_GIT_ALWAYS_AUTH=false
+      - DRONE_GOGS_SERVER=http://122.152.229.139:10080
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_SERVER_HOST=122.152.229.139:10080
+      - DRONE_SERVER_PROTO=http
+      - DRONE_TLS_AUTOCERT=false
