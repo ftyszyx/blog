@@ -1,0 +1,27 @@
+sudo docker pull onlyofficedocumentserver
+docker run -i -t -d -p 9000:80 onlyoffice/documentserver
+访问http://服务器地址:80
+
+可以通过下面命令进入终端
+ docker exec -it 818b7157 bash
+
+
+
+ oneinstack一键搭建web环境 php
+
+Nginx install dir:              /usr/local/nginx
+
+Database install dir:           /usr/local/mysql
+Database data dir:              /data/mysql
+Database user:                  root
+Database password:              oneinstack
+
+PHP install dir:                /usr/local/php
+
+phpMyAdmin dir:                 /data/wwwroot/default/phpMyAdmin
+phpMyAdmin Control Panel URL:   http://172.16.0.10/phpMyAdmin
+
+Index URL:                      http://172.16.0.10/
+
+dbrootpwd='oneinstack'
+set password for root@localhost = password(‘123’);

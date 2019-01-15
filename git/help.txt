@@ -1,0 +1,9 @@
+
+git clone submodule  子模块的clone
+
+方法1：
+git submodule init
+git submodule update
+
+方法2：
+git clone --recursive  url
