@@ -1,0 +1,47 @@
+centos 7:
+
+一、代理安装
+
+1. 安装 TinyProxy
+yum -y install tinyproxy
+
+2. 配置 TinyProxy
+vim /etc/tinyproxy/tinyproxy.conf
+修改 Port 端口，默认为 8888
+
+Port 8888
+
+注释掉 Allow，表示允许所有人访问代理
+#Allow 127.0.0.1
+
+隐藏掉Via请求头部，去掉下面的注释
+
+DisableViaHeader Yes
+
+3、启动 TinyProxy
+
+systemctl start tinyproxy.service 
+更多命令如下：
+
+systemctl restart tinyproxy.service 
+systemctl stop tinyproxy.service 
+systemctl status tinyproxy.service 
+systemctl enable tinyproxy.service 
+
+4、关闭防火墙
+systemctl status firewalld
+systemctl stop firewalld
+systemctl disable firewalld
+
+5、测试
+curl -m 30 --retry 3 -x http://95.179.158.24:8888 http://proxy.mimvp.com/exist.php | grep 'color="red"'
+
+二、设置代理
+git config --global http.proxy http://95.179.158.24:8888
+git config --global https.proxy https://95.179.158.24:8888
+取消代理设置
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+
+export http_proxy=http://95.179.158.24:8888
+export https_proxy=http://95.179.158.24:8888

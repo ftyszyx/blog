@@ -1,0 +1,3 @@
+git config --global user.email "whyzi@qq.com"
+git config --global user.name "zyx"
+ssh-keygen -t rsa -b 4096 -C "whyzi@qq.com"
