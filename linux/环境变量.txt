@@ -1,0 +1,9 @@
+export DRONE_GITHUB_SERVER="https://github.com"
+
+
+source test.sh 可以让设置的变量对其它shell有效
+
+在#  /root/.bashrc  最后加入环境变量可以对其它终端有效
+
+
+

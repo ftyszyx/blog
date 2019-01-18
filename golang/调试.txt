@@ -1,0 +1,37 @@
+ https://golang.org/doc/gdb
+ https://github.com/go-delve/delve
+
+通过gdb:
+ 通过以下命令编译
+ go build -gcflags "-N -l"
+
+ gdb 程序 运行
+
+ gdb的 一些命令：
+ run
+
+ help break  查看帮助
+
+ break 22 设置断点
+
+ list 查看上下文
+ print 打印变量
+ set variable count=3 修改变量count的值
+next
+continue
+
+通过delve
+安装：
+go get -u github.com/go-delve/delve/cmd/dlv
+
+启动
+
+dlv debug github.com/me/foo/cmd/foo
+
+
+dlv attach 40994
+
+ break main.main
+
+ continue
+
