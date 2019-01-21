@@ -1,4 +1,4 @@
-sudo docker pull onlyofficedocumentserver
+sudo docker pull onlyoffice/documentserver
 docker run -i -t -d -p 9000:80 onlyoffice/documentserver
 访问http://服务器地址:80
 
@@ -8,6 +8,8 @@ docker run -i -t -d -p 9000:80 onlyoffice/documentserver
 
 
  oneinstack一键搭建web环境 php
+ wget http://mirrors.linuxeye.com/oneinstack-full.tar.gz && tar xzf oneinstack-full.tar.gz && ./oneinstack/install.sh --nginx_option 1 --php_option 7 --phpcache_option 1 --phpmyadmin  --db_option 2 --dbinstallmethod 1 --dbrootpwd oneinstack --reboot 
+
 
 Nginx install dir:              /usr/local/nginx
 
@@ -25,3 +27,7 @@ Index URL:                      http://172.16.0.10/
 
 dbrootpwd='oneinstack'
 set password for root@localhost = password(‘123’);
+
+
+
+
