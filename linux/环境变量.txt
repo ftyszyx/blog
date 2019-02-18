@@ -5,5 +5,6 @@ source test.sh 可以让设置的变量对其它shell有效
 
 在#  /root/.bashrc  最后加入环境变量可以对其它终端有效
 
+/etc/profile 文件会主动执行相关本
 
-
+#在 ~/.bashrc 中添加 source /etc/profile ，这样每次用户启动bash，则会加载环境变量

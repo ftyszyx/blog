@@ -7,3 +7,18 @@ openssl rand -base64 10
 
 查看端口占用
 netstat -anp|grep 80 
+
+查看系统配置
+CPU:
+cat /proc/cpuinfo |more
+内存：
+ cat /proc/meminfo |more （注意输出信息的最后一行:MachineMem:   41932272 kB）
+
+ free -m
+
+ top
+
+
+ 查看磁盘信息
+ fdisk -l 
+ 
