@@ -1,0 +1,17 @@
+server 安装：
+1、docker pull drone/drone:1.0.0-rc.1
+
+docker run \
+  --volume=/var/lib/drone:/data \
+  --env=DRONE_TLS_AUTOCERT=false \
+  --env=DRONE_GOGS_SERVER=http://122.152.229.139:3000 \
+  --env=DRONE_RPC_SECRET=123456 \
+  --env=DRONE_SERVER_HOST=122.152.229.139 \
+  --env=DRONE_SERVER_PROTO=http  \
+  --env=DRONE_GIT_ALWAYS_AUTH=false \
+  --publish=80:80 \
+  --publish=443:443 \
+  --restart=always \
+  --detach=true \
+  --name=drone \
+  drone/drone:1.0.0-rc.1

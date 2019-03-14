@@ -21,4 +21,7 @@ cat /proc/cpuinfo |more
 
  查看磁盘信息
  fdisk -l 
- 
+ df -h  查看磁盘占用
+ du -sh 查看当前目录的大小
+ du file.log  查看指定文件的占用
+ du -h test 查看test目录占用情况
