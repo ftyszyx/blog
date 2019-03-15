@@ -15,3 +15,41 @@ docker run \
   --detach=true \
   --name=drone \
   drone/drone:1.0.0-rc.1
+
+
+2、agent
+docker pull drone/agent:1.0.0-rc.1
+
+运行
+windows 
+
+docker run \
+  --volume=//./pipe/docker_engine://./pipe/docker_engine \
+  --env=DRONE_RPC_SERVER=http://122.152.229.139 \
+  --env=DRONE_RPC_SECRET=123456 \
+  --env=DRONE_RUNNER_CAPACITY=2 \
+  --env=DRONE_RUNNER_NAME=linux4 \
+  --restart=always \
+  --detach=true \
+  --name=agent4 \
+  drone/agent:1.0.0-rc.1
+
+
+linux
+docker run \
+  --volume=/var/run/docker.sock:/var/run/docker.sock \
+  --env=DRONE_RPC_SERVER=http://122.152.229.139 \
+  --env=DRONE_RPC_SECRET=123456 \
+  --env=DRONE_RUNNER_CAPACITY=2 \
+  --env=DRONE_RUNNER_NAME=linux3 \
+  --restart=always \
+  --detach=true \
+  --name=agent3 \
+  drone/agent:1.0.0-rc.1
+
+
+  0.8版本使用：
+
+docker pull drone/drone:0.8
+
+Docker Compose
