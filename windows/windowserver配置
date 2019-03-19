@@ -1,0 +1,12 @@
+1、远程连接数：
+计算机配置–>管理模板—>windows组件—>然后在右边的菜单中选择远程桌面服务；双击打开。双击远程桌面会话主机->连接
+
+
+Restrict Remote Desktop Services user to a single Remote Desktop Services session parameter to Disabled
+
+要重启
+
+
+2、
+用户通过ctrl+alt+end进入修改密码
+ctrl+alt+end  代替ctrl+alt+del
