@@ -10,3 +10,9 @@ Restrict Remote Desktop Services user to a single Remote Desktop Services sessio
 2、
 用户通过ctrl+alt+end进入修改密码
 ctrl+alt+end  代替ctrl+alt+del
+
+3、自动注销已经断开的远程连接
+win + r 打开命令输入框，在运行框中输入gpedit.msc，回车
+找到： 计算机设置 —> 管理模块—> windows组件---->远程桌面服务
+下面找到“设置超时中断和注销”项
+配置启用，及时间

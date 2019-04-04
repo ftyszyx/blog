@@ -53,3 +53,30 @@ docker run \
 docker pull drone/drone:0.8
 
 Docker Compose
+
+
+
+drone ->
+reposelist   项目列表
+
+
+
+用户点build后  -》
+
+一个build 根据不同的环境变量产生 多个buiditem->
+
+->将builditem 分发给agent
+
+->agent执行builditem
+
+->agent执行过程中同时上报日志（要不断的上报，实时显示agent的执行状态）
+
+
+agent的管理：
+->agent在后台中有列表
+
+-》后台可以查看agent的状态 ，同时可以查看agent正在执行的任务状态
+
+->可以查看agent的日志
+
+
