@@ -65,7 +65,13 @@ reposelist   项目列表
 
 一个build 根据不同的环境变量产生 多个buiditem->
 
-->将builditem 分发给agent
+->将builditem 分发给agent(立即产生agent个build,存数据库，内存也保持一份)
+
+每个agent都建立一个队列，先近先出fifo
+
+agent可以启动多个线程，同时执行多个builditem?没有这个必要吧
+
+-》agent主动拉取builditem 
 
 ->agent执行builditem
 
@@ -77,6 +83,9 @@ agent的管理：
 
 -》后台可以查看agent的状态 ，同时可以查看agent正在执行的任务状态
 
-->可以查看agent的日志
+->可以查看agent的日志（agent上报的日志没结束的时候是不存数据库的，结束后再保存数据库）
+
+
+用户点开某一个日志，如果
 
 
