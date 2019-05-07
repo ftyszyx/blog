@@ -61,13 +61,22 @@ reposelist   项目列表
 
 
 
+agent是人工添加的
+
+
 用户点build后  -》
 
 一个build 根据不同的环境变量产生 多个buiditem->
 
-->将builditem 分发给agent(立即产生agent个build,存数据库，内存也保持一份)
+builditem有一个有效时间，超过有效时间，这个item失效
 
-每个agent都建立一个队列，先近先出fifo
+
+agent请求任务时，没有过期的builditem产生对应agent的proc列表
+
+agent 都有一个agentname ,
+每个agent都会去请求，请求的时候，判断build 在proc里面有没有对应项，有的话，
+
+//每个agent都建立一个队列，先近先出fifo
 
 agent可以启动多个线程，同时执行多个builditem?没有这个必要吧
 
@@ -87,5 +96,8 @@ agent的管理：
 
 
 用户点开某一个日志，如果
+
+
+日志存服务端
 
 

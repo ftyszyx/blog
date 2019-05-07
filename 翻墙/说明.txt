@@ -1,6 +1,6 @@
 1、服务器运行后，测试是否能ssh连通，连不通说明被墙
 
-um -y install wget
+yum -y install wget
 
 wget --no-check-certificate https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocksR.sh
 
