@@ -1,0 +1,34 @@
+1、android:banner="@drawable/app_banner"
+会导致在魅族手机上安装失败，提示解析apk错误，去掉
+因为intent-filter加了
+
+<!--<category android:name="android.intent.category.LEANBACK_LAUNCHER" />-->
+表明是支持tv的，去掉后，就可以不用加banner
+这些属性是21才支持的
+
+
+2、android l2cpp 打包闪退问题：
+
+和打包时勾选了strip engine code相关，选上有闪退，不选上就不闪退
+但是选上后 
+
+魅族手机：
+打包时勾选了strip engine code相关，选上时第一次启动无法进场景，第二次启动后可以
+打包时没勾选了strip engine code相关， 第一次启动可以进场景
+
+华为手机
+打包时勾选了strip engine code相关，  进不场景闪退
+打包时没勾选了strip engine code相关， 正常进入
+
+
+包大小：
+strip engine code 有x86:43.8M
+strip engine code 无x86:29.7M
+无x86:32M
+有x86: 46.4M
+
+
+
+il2cpp打出的包如果选上strip engine code  65m 不选上，65m
+
+ 

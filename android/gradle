@@ -1,0 +1,29 @@
+gradle安装：
+
+下载安装包，将bin目录放入环境变量
+
+
+
+1、生成wrapper
+
+gradle wrapper
+
+
+可以定制wrapper:
+gradle wrapper --gradle-version 5.4.1 --distribution-type all
+
+gradle-wrapper.jar  用来下载gradle版本的工具
+
+
+2、gradlew.bat build  运行build，判断wrapper是否是好的
+
+3、./gradlew --version 查看版本
+4、./gradlew wrapper --gradle-version 5.4.1 升维
+
+
+5、./gradlew copy  可运行gradle 的task
+
+gradlew tasks 查看所有的task
+
+
+6、gradle init --type java-library --project-name jvm-library 初始化一个工程

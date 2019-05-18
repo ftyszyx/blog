@@ -1,0 +1,7 @@
+gradlew tasks 列出所有任务
+
+check 运行所以的checks,这意味着运行所有的tests在已连的设备或模拟器上。
+
+build 是check和assemble的集合体。
+
+clean 清楚项目的output文件。
