@@ -1,0 +1,14 @@
+svn
+
+1、问题：
+   C manifest.json
+      >   local file add, incoming file add upon update
+
+     处理：
+      svn resolve --accept working manifest.json
+      svn update
+      svn revert manifest.json
+
+2、svn rm --keep-local folder_name
+
+3、svn revert 可以undo add

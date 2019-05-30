@@ -1,0 +1,18 @@
+shader里面的操作：
+坐标系中的位置 (position)
+法线 (normal)
+切线 (tanent)
+颜色 (color)
+纹理坐标 (texture coordinate)
+
+
+
+POSITION： 表示顶点在物体坐标内的位置
+SV_POSITION： 表示被转换到投射空间后的坐标位置 (通过 UNITY_MATRIX_MVP 这个矩阵可以转换)，可以参照 [坐标系] 这一节内容。
+COLOR： 表示颜色
+NORMAL： 表示法线
+TANGENT： 表示切线
+TEXCOORD0 和 TEXCOORD1 : 纹理坐标 UV0 和 UV1。UV 换个说法就是 XY 坐标，只不过是为了怕重名导致的混淆，所以叫做UV。 U 表示横坐标， V表示纵坐标。
+
+
+Shader Level of Detail (LOD) 其实就是根据设备性能的不同编译不同版本的Shader，目前这玩意儿最大的用途也就是为了适配高低配置不同的手机(以上为个人意见)。

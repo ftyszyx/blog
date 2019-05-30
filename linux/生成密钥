@@ -1,0 +1,10 @@
+1、制作密钥对
+
+生成密钥
+ssh-keygen
+
+默认生成在/root/.ssh/
+
+
+2、在服务器上安装公钥
+cat id_rsa.pub >> authorized_keys

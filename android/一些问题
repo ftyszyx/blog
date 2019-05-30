@@ -31,4 +31,15 @@ strip engine code 无x86:29.7M
 
 il2cpp打出的包如果选上strip engine code  65m 不选上，65m
 
+
+3、andriod打包时间：l2cpp
+第一次打： 220s+68s
+不删除旧工程覆盖打：54+68s
+andriod打包时间：mono
+
+
+
+
+
+
  

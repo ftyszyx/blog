@@ -1,0 +1,129 @@
+http://blog.shuiguzi.com/2015/04/26/Shader_1/
+
+
+1、subshader中的queue标签：指定渲染顺序，数越小越先渲染
+
+Background： 对应数值为 1000，用于需要被最先渲染的对象，如背景什么的。
+Geometry： 对应数值为 2000, 用于不透明的物体。这个是默认的选项（如果不指明 Queue 标签的值，自动给你指定为 Geometry）。
+AlphaTest： 对应的数值为 2450, 用于需要使用 AlphaTest 的对象来提高性能。AlphaTest 类似于裁剪 (clip) 功能。
+Transparent： 对应的数值为 3000， 用于需要使用 alpha blending 的对象，比如粒子，玻璃等。
+Overlay： 对应的数值为 4000，用于最后被渲染的对象，比如 UI。
+
+2、shader语法有：
+CG：  
+HLSL：  
+GLSL： 
+unity的shader包容三种：
+GG 和 HLSL 包括在 CGPROGRAM ... ENDCG 语法块内
+GLSL 包括在 GLSLPROGRAM ... ENDGLSL 语法块内
+
+3、shader三种形式：
+surface shader:会被编译成vertex and fragment shaders,在pass外面
+vertex and fragment shaders  ，在pass里面
+Fixed function shaders
+
+4、坐标系
+物体坐标系 (Object Space)： 有时也叫做 Local Space。是 3D 模型内部的坐标系，原点 (0, 0, 0) 一般是模型中心。
+世界坐标系 (World Space)： Unity 系统中的绝对坐标系，原点是在场景的 (0，0，0) 位置处。
+视口坐标系 (Viewport Space)： 以摄像机为原点，朝向为 Z 轴的坐标系。原点 (0, 0, 0) 是摄像机的位置。
+屏幕坐标系 (Screen Space)： 原点 (0, 0) 在屏幕的左下角，右上角为 (Screen.width，Screen.height)。
+
+shader对物体坐标的转换：
+先把立方体从模型的物体坐标系转换成世界坐标系，从 物体 到 世界。这样子，它和摄像机（世界坐标）的位置就用同一个坐标系描述了。
+再把立方体从世界坐标转换成视口坐标系，也就是摄像机因为原点的坐标系，从 世界 到 视口。这样它是在摄像机的正面，还是在反面了。
+最后在投射到屏幕坐标系上， 从 视口 到 屏幕。这样知道哪些区域需要绘制在屏幕上，哪些不需要。
+
+
+shader：
+
+ //shader 的名字会显示在 Unity 的 Inspector 中选择 shader 的菜单里面
+Shader "shader 的名字" {
+    // 属性
+    [Properties]
+
+    // 可能存在多个 subshader。Unity 会在所有 subshader 列表中选择当前环境中可用的第一个 subshader
+    Subshader {
+        // subshader 的标签
+        [Tags]
+
+        // 给多个 pass 公用的设置
+        [Common State]
+
+        // 可能存在多个 pass, 每个 pass 都会引起一次渲染过程
+        Pass {
+            // pass 的标签
+            [Pass Tags]
+
+            // 渲染设置, 如颜色混合
+            [Render Setup]
+
+            // 纹理设置，只有在 fixed function shader 中才可用
+            [Texture Setup]
+        }
+
+        // 可以有多个 pass
+        [其他的 Pass]
+    }
+
+    // 可以有多个 subshader
+    [其他的 Subshader]
+
+    // 当所有 subshader 失败的时候, 使用 Fallback 指定的 shader
+    [Fallback]
+
+    // 当有自定义 shader 的设置 UI 时候用
+    [CustomEditor]
+}
+
+
+surface shader代码：
+ 
+Shader "shader 的名字" {
+
+    Subshader {
+        // CGPROGRAM ... ENDCG 在 Subshader 里面
+        CGPROGRAM
+
+        // surfaceFunction 是 surf,
+        // 光照模型是 Standard
+        // [...] 表示可选参数
+        #pragma surface surf Standard [...]
+
+
+        // surfaceFunction
+        void surf () {
+
+        }
+
+        ENDCG
+    }
+}
+
+vertex shader代码：
+ 
+Shader "shader 的名字" {
+
+    Subshader {
+
+        pass {
+            // CGPROGRAM ... ENDCG 在 Pass 里面
+            CGPROGRAM
+
+            // vertex shader 的函数是 vert
+            #pragma vertex vert
+
+            // fragment shader 的函数是 fragment
+            #pragma fragment frag
+
+            void vert() {
+
+            }
+
+            void frag () {
+
+            }
+
+            ENDCG
+        }
+    }
+}

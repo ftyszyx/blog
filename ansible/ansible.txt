@@ -1,0 +1,11 @@
+1、安装pip:
+ apt-get install -y python-pip
+ 升级pip
+ sudo pip install -U pip
+ 安装ansible
+ sudo pip install ansible
+ 安装openssh server
+ sudo apt-get install -y openssh-server python2.7
+
+
+ 2、安装好 Ansible 后，我们可以在 /etc/ansible/ 的目录底下找到 Ansible 的设定档。

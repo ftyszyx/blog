@@ -1,13 +1,10 @@
-锘緻echo off
+@echo off
 
-set username=
-set nickname=
-set password=
+set username=ljl
+set nickname=陆洁兰
+set password=641524
 
-set /p username=input username:
-set /p password=input password:
-
-set folderpath=D:\%username%
+set folderpath=D:\私有目录\%nickname%
 NET USER %username% %password% /add /comment:"Account for User" /expires:never  
 net localgroup "Remote Desktop Users" %username% /add
 
@@ -20,4 +17,12 @@ if exist %folderpath% (
 	)
 
 
+set folderpath2=D:\可读私有目录\%nickname%
+if exist D:\可读私有目录\%nickname% (
+echo "folder exit"
+) else (
+	md D:\可读私有目录\%nickname%
+	echo y|cacls.exe D:\可读私有目录\%nickname%  /c /e /t /p users:r
+	echo y|cacls.exe D:\可读私有目录\%nickname% /c /e /t /p %username%:f
+)
 NET USER %username%  /HOMEDIR:%folderpath%
