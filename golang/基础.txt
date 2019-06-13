@@ -1,3 +1,16 @@
+
+
+go env可以查看当前的环境
+
+mac下配置：
+Edit your ~/.bash_profile to add the following line:
+
+export GOPATH=$HOME/go 
+export PATH=$PATH:$GOPATH/bin
+
+
+其它：
 export GOROOT="/usr/lib/go-1.10"
 export GOPATH=$HOME/go  
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+

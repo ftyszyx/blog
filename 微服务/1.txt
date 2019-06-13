@@ -1,0 +1,11 @@
+1、安装grpc
+go get -u google.golang.org/grpc
+
+2、下载代码生成工具
+Install Protocol Buffers v3
+ https://github.com/google/protobuf/releases
+ 放到gopath/bin中
+
+ 3、安装 protoc plugins for go
+ go get -u github.com/golang/protobuf/protoc-gen-go
+
