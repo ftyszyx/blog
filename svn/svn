@@ -12,3 +12,6 @@ svn
 2、svn rm --keep-local folder_name
 
 3、svn revert 可以undo add
+
+4、svn checkout --config-option config:miscellany:use-commit-times=yes 
+使用服务器时间checkout

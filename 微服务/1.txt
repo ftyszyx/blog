@@ -9,3 +9,21 @@ Install Protocol Buffers v3
  3、安装 protoc plugins for go
  go get -u github.com/golang/protobuf/protoc-gen-go
 
+
+生成对应的文件：
+protoc -I. --go_out=plugins=grpc:. proto/consignment/consignment.proto
+
+-I.  包含目录
+
+--goout  go 的输出目录
+
+输入文件
+
+订单
+
+4、商城微服务框架设计：
+用户登录验证
+商品
+订单系统
+日志系统
+运营活动系统

@@ -1,0 +1,6 @@
+rz 报错的话
+-a, –ascii
+-b, –binary 用binary的方式上传下载，不解释字符为ascii
+-e, –escape 强制escape 所有控制字符，比如Ctrl+x，DEL等
+
+rz -be  强制二进制并忽略转义
