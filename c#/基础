@@ -1,0 +1,23 @@
+###
+函数重载:相同的函数名有多个定义 ,只是参数不同
+
+抽象类，不能实例化，声明继承的接口
+abstract class Shape
+   {
+       abstract public int area();
+   }
+
+
+
+虚方法 可实例化，可被子类重写 virtual，override
+ public virtual void Draw()
+    {
+        Console.WriteLine("执行基类的画图任务");
+    }
+
+
+  public override void Draw()
+    {
+        Console.WriteLine("画一个长方形");
+        base.Draw();
+    }

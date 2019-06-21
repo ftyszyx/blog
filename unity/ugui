@@ -1,0 +1,8 @@
+### ugui
+
+#### recttransform 继承于transform
+
+##### anchors锚点或锚框
+
+Anchors是一个点时
+在数值上表示为：achorMin.x==achorMax.x && achorMin.y==achorMax.y
