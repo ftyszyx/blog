@@ -1,0 +1,29 @@
+类的inspector显示
+
+
+https://www.cnblogs.com/zhaoqingqing/p/3995304.html
+
+类成功的public变量
+在没有加入任何Attribute的前提下，public变量是默认被视为可以被Serialize的。
+
+
+[SerializeField] Attribute
+
+
+单独的class或struct
+Serializable是.Net自带的序列化
+
+有时候我们会自定义一些单独的class/struct, 由于这些类并没有从 MonoBehavior 派生所以默认并不被Unity3D识别为可以Serialize的结构。自然也就不会在Inspector中显示。我们可以通过添加 [System.Serializable]这个Attribute使Unity3D检测并注册这些类为可Serialize的类型。具体做法如下：
+
+[System.Serializable]
+public class FooBar {
+    public int foo = 5;
+    public int bar = 10;
+}
+
+
+
+变量在Inspector中会根据变量的大写字母来隔开来显示，并且会将首字母强制大写的方式显示。 如:
+
+public int myFooBar = 0;
+在GUI将会显示为: My Foo Bar

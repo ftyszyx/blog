@@ -21,3 +21,9 @@ abstract class Shape
         Console.WriteLine("画一个长方形");
         base.Draw();
     }
+
+   接口：和抽象类类似
+   interface IMyInterface
+{
+    void MethodToImplement();
+}
