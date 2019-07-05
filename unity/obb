@@ -1,0 +1,82 @@
+
+https://developer.android.com/google/play/expansion-files.html
+
+google 允许2个obb文件，每个文件最大2G
+obb文件存在sd卡中（外部存储）
+规则：
+main.obb 很少更新
+patch.obb  小，可以多次更新
+每次更新obb，apk包也要更新（修改里面的版本号）
+
+obb文件可以是任何格式，也可以用jobb工具去打包：在android-sdk\tools\bin目录下
+jobb [-d <directory>][-o <filename>][-pn <package>][-pv <version>] \
+     [-k <key>][-ov][-dump <filename>][-v][-about]
+
+jobb -d /temp/assets/ -o my-app-assets.obb -k secret-key -pn com.my.app.package -pv 11  打包
+jobb -d /temp/obb-output/ -o my-app-assets.obb -k secret-key  解压
+
+
+命名：[main|patch].<expansion-version>.<package-name>.obb
+main.314159.com.example.app.obb
+
+
+ 通过getObbDir()获取obb文件路径
+<shared-storage>/Android/obb/<package-name>/
+<shared-storage> is the path to the shared storage space, available from getExternalStorageDirectory().
+<package-name> is your app's Java-style package name, available from getPackageName().
+
+要增加外部权限许可
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+解压obb文件到getExternalFilesDir()中
+
+有可能google play没有把obb文件下载下来，此时需要程序下载obb文件，通过google play api获取下载地址
+
+可以用unity打出apk和obb文件
+用adb先安装apk，然后拷贝obb到对应文件中，obb命名
+
+
+1、obb支持需要加READ_EXTERNAL_STORAGE权限：
+因为如果不加权限，有不确定性的风险
+Since Android 4.4 (API level 19), apps can read OBB expansion files without external storage permission. However, some implementations of Android 6.0 (API level 23) and later still require permission
+
+2、obb 通常情况是google play在玩家下载apk包时自动下载的，但也有可能google play会下载失败，google 提供了一个获取obb地址的接口，方便开发者考虑到这种情况
+
+
+3、为了能自己下载obb文件需要增加以下权限：
+<manifest ...>
+    <!-- Required to access Google Play Licensing -->
+    <uses-permission android:name="com.android.vending.CHECK_LICENSE" />
+
+    <!-- Required to download files from Google Play -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Required to keep CPU alive while downloading files
+        (NOT to keep screen awake) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- Required to poll the state of the network connection
+        and respond to changes -->
+    <uses-permission
+        android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Required to check whether Wi-Fi is enabled -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <!-- Required to read and write the expansion files on shared storage -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    ...
+</manifest>
+
+
+
+总流程；
+
+打包时，将资源打成zip文件，可以不压缩，命名成[main|patch].<expansion-version>.<package-name>.obb,和包一些上传到google play
+
+客户端启动时：
+1、检查是不是支持obb的包
+2、如果是支持obb的包，检查obb文件存储目录中obb文件是否存在
+3、如果obb文件不存在，启动obb文件下载流程，显示下载进度
+4、将obb中的文件的filelist保存好，其中的文件

@@ -15,3 +15,6 @@ svn
 
 4、svn checkout --config-option config:miscellany:use-commit-times=yes 
 使用服务器时间checkout
+
+4、svn add 命令 递归目录下所有文件
+svn add . --no-ignore --force 
