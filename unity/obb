@@ -1,12 +1,18 @@
 
 https://developer.android.com/google/play/expansion-files.html
 
-google 允许2个obb文件，每个文件最大2G
-obb文件存在sd卡中（外部存储）
-规则：
-main.obb 很少更新
+
+简单介绍：
+1、google 允许2个obb文件，每个文件最大2G
+2、obb文件存在手机的外部存储
+3、命名规则：[main|patch].<版本号>.<包名>.obb
+4、main和patch官方推荐使用原则：
+main.obb 大，很少更新
 patch.obb  小，可以多次更新
-每次更新obb，apk包也要更新（修改里面的版本号）
+5、每次更新obb，apk包也要更新（修改里面的版本号），不能在不上传新包的情况下，更新某一个obb文件
+6、正常情况google play会在玩家下载游戏时，同时自动的下载好obb文件，但是google不保证obb文件会下载成功，具体游戏去处理各种异常
+
+
 
 obb文件可以是任何格式，也可以用jobb工具去打包：在android-sdk\tools\bin目录下
 jobb [-d <directory>][-o <filename>][-pn <package>][-pv <version>] \
@@ -71,12 +77,36 @@ Since Android 4.4 (API level 19), apps can read OBB expansion files without exte
 
 
 
-总流程；
-
+打包流程；
 打包时，将资源打成zip文件，可以不压缩，命名成[main|patch].<expansion-version>.<package-name>.obb,和包一些上传到google play
 
 客户端启动时：
 1、检查是不是支持obb的包
 2、如果是支持obb的包，检查obb文件存储目录中obb文件是否存在
-3、如果obb文件不存在，启动obb文件下载流程，显示下载进度
-4、将obb中的文件的filelist保存好，其中的文件
+3、如果obb文件不存在，启动obb文件下载流程，显示下载进度,obb文件下载完后，重启游戏
+4、然后通过sdk提供接口读取obb文件中的内容
+
+
+
+obb优点：
+1、利用了google play的网络，提高了用户下载游戏资源包的成功率（对于一个网络交互频繁游戏，资源下载只是第一步，如果不去想办法改进网络不好地区的服务器连接，玩家一样也玩不下去。所以我觉得用obb，适合那些想节约服务器成本的小公司，而且只适合一些单机游戏。要想游戏的体验更好，大公司还是应该靠自己的能力去提升网络环境。而且资源一般都是通过cdn分发，成本应该不会很高）
+
+obb缺点：
+1、增加了java代码的复杂度，按照google文档，需要用到google提供两个库，java调用涉及本地的一些api,android 版本太多，处理不当有兼容性问题：
+a).当google play自己下载obb文件失败时，程序需要通过sdk获取obb下载地址，然后下载obb，这个流程依赖google play sdk,需要新接入google提供的一个库
+b).因为obb文件是压缩文件，从中读取内容，用到另一个google提供的库
+
+
+2、增加了游戏逻辑的复杂度：
+a)、玩家安装apk时,google play并不保证obb文件会同时下载成功，游戏需要考虑obb文件下载失败的情况
+b)、在google play没有自动下载好obb文件时，游戏自己获取obb下载地址，并下载obb文件。但需要考虑obb文件无法下载的情况，此时游戏需要从自己的cdn下载资源的
+c)、游戏需要多维护一个资源目录(obb文件的资源)，以前只有包内资源和从自己cdn下载的包外资源两部分，现在游戏资源有可能会在手机的三个地方存放
+
+3、游戏需要增加权限：因为google play的审核对游戏的权限很敏感,增加权限会有被拒审的风险
+<uses-permission android:name="com.android.vending.CHECK_LICENSE" />  获取obb下载地址，google play验证时需要用到
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> 读写外部存储空间的权限
+
+4、增加了游戏发布的麻烦
+以前只用打一个apk包，运营只需上传apk到google play即可。
+现在需要出一个apk包，同时将资源打包成obb文件，运营需要上传多份文件到google play,
+而且资源文件有修改，为了上传修改后的obb文件，必须重新出包，（google play不支持仅仅上传obb文件）
