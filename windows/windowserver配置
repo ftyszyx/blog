@@ -1,8 +1,13 @@
 1、远程连接数：
-计算机配置–>管理模板—>windows组件—>然后在右边的菜单中选择远程桌面服务；双击打开。双击远程桌面会话主机->连接
+、在控制面板先搜索远程，允许其他用户连接到此PC；
 
+2、windows+R -> 输入gpedit.msc
 
-Restrict Remote Desktop Services user to a single Remote Desktop Services session parameter to Disabled
+3、找到【计算机设置】--【管理模板】--【windows组件】--【远程桌面服务】--【远程桌面会话主机】--【连接】 
+
+4、拒绝将已经登录到控制台会话的管理员注销---选择启用
+5、限制连接的数量---选择启用，配置10个 (视具体情况而定) 
+6、将远程桌面服务用户限制到单独的远程桌面服务会话—选择禁用 
 
 要重启
 
@@ -16,3 +21,7 @@ win + r 打开命令输入框，在运行框中输入gpedit.msc，回车
 找到： 计算机设置 —> 管理模块—> windows组件---->远程桌面服务
 下面找到“设置超时中断和注销”项
 配置启用，及时间
+
+
+4、远程连接配置：
+https://blog.csdn.net/flyingshuai/article/details/77869279

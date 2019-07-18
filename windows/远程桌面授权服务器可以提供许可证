@@ -1,0 +1,7 @@
+Windows server 2012服务器远程桌面登录时出现错误提示：“由于没有远程桌面授权服务器可以提供许可证，远程会话被中断。请跟服务器管理员联系。”此时可以使用“mstsc /admin /v:目标ip”来强制登录服务器，但只能是管理员身份。
+
+
+参考：
+1、参考http://blog.sina.com.cn/s/blog_5e8c26990102w7bc.html安装相应服务
+二参考要安装
+https://blog.csdn.net/flyingshuai/article/details/77869279
