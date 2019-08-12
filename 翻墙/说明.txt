@@ -25,4 +25,5 @@ auth_sha1_v4 协议插件
 plain  混淆
 
 
-
+shadowsocks推广网址
+https://order.shadowsocks.se/aff.php?aff=29254

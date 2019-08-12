@@ -1,3 +1,8 @@
 闪退日志处理
 
 ndk-stack -sym .\apk_bin-1.10.051701-v295787514.symbols\arm64-v8a\  -dump .\ab_back.txt
+
+
+adb logcat > crash.log
+ndk-stack -sym /Users/yangxin/Documents/devToos/java/android-ndk-r9d/samples/hello-jni/obj/local/armeabi-v7a -dump crash.log
+ 
