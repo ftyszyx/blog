@@ -10,3 +10,5 @@
  直接
  go build
  就会下载相应的模块
+
+ ![命令](../static/gomod1.png)
