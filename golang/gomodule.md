@@ -1,5 +1,6 @@
  需要先设置 GO111MODULE 环境变量
- GO111MODULE=on
+
+set GO111MODULE=on
 
  初始化：
  go mod init helloworld
