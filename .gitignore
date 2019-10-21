@@ -53,3 +53,4 @@ dkms.conf
 /leetcode/test
 /language/java/*.class
 /language/go/main.exe
+/python/.idea
