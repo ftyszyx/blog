@@ -54,3 +54,4 @@ dkms.conf
 /language/java/*.class
 /language/go/main.exe
 /python/.idea
+/机器学习/data
