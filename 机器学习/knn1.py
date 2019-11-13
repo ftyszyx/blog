@@ -4,5 +4,6 @@ from os import listdir
 import  operator
 from collections import Counter
 
-def creteDataSet():
+def file2matrix(filename):
+    fr=open(filename)
 
