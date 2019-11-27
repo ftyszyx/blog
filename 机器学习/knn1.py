@@ -1,10 +1,6 @@
 #coding: utf-8
-from numpy import *
-from os import listdir
-import  operator
-from collections import Counter
-
-
+import matplotlib
+import matplotlib.pyplot as plt
 #处理数据 返回数量和对应标签
 def file2matrix(filename):
     fr=open(filename)
@@ -21,4 +17,12 @@ def file2matrix(filename):
     return returnMat,classLabelVector
 
 #分析数据
+if __name__=="__main__":
+
+    datamat,labels=file2matrix("./data/datingTestSet2.txt")
+    fig = plt.figure()
+
+    ax = fig.add_subplot(111)
+    ax.scatter(datingDataMat[:, 0], datingDataMat[:, 1], 15.0 * array(datingLabels), 15.0 * array(datingLabels))
+    plt.show()
 
