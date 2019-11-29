@@ -16,21 +16,7 @@ import os
 # 魅力一般的人
 # 极具魅力的人
 
-# 处理数据 返回数量和对应标签
-def file2matrix(filename):
-    fr = open(filename)
-    lines = fr.readlines()
-    number_of_lines = len(lines)
-    return_mat = zeros((number_of_lines, 3))
-    label_vector = []
-    index = 0
-    for line in lines:
-        line = line.strip()
-        list_of_line = line.split('\t')
-        return_mat[index, :] = list_of_line[0:3]
-        label_vector.append(int(list_of_line[-1]))
-        index += 1
-    return return_mat, label_vector
+
 
 
 # 归一化
@@ -39,7 +25,7 @@ def auto_norm(dataset):
     Desc:
         归一化特征值，消除特征之间量级不同导致的影响
     parameter:
-        dataSet: 数据集
+        data_set: 数据集
     return:
         归一化后的数据集 normDataSet. ranges和minVals即最小值与范围，并没有用到
 
@@ -48,7 +34,7 @@ def auto_norm(dataset):
         其中的 min 和 max 分别是数据集中的最小特征值和最大特征值。该函数可以自动将数字特征值转化为0到1的区间。
     """
     # 计算每种属性的最大值、最小值、范围
-    min_val = dataset.min(0) # axie=0的
+    min_val = dataset.min(0)  # axie=0的
     max_val = dataset.max(0)
     # 极差
     ranges = max_val - min_val
@@ -61,12 +47,22 @@ def auto_norm(dataset):
     return normal_data, ranges, min_val
 
 
-# 分析数据
-if __name__ == "__main__":
-    data_mat, dataLabels = file2matrix("./data/datingTestSet2.txt")
-    normMat, ranges, minVals = auto_norm(data_mat)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    # x ,y 横坐标  纵坐标  圆的大小  颜色
-    ax.scatter(data_mat[:, 0], data_mat[:, 1], 15.0 * array(dataLabels), 15.0 * array(dataLabels))
-    plt.show()
+# 分类
+def classify0(src_data, data_set, labels, k):
+    data_size = data_set.shape[0]
+    # 距离度量 度量公式为欧氏距离
+    diff_mat = tile(src_data, (data_size, 1)) - data_set
+    sq_diff_mat = diff_mat ** 2
+    sq_distances = sq_diff_mat.sum(axis=1)
+    distances = sq_distances ** 0.5
+    # 将距离排序：从小到大
+    sorted_dist_dic = distances.argsort()
+    # 选取前K个最短距离， 选取这K个中最多的分类类别
+    class_count = {}
+    for i in range(k):
+        vote_label = labels[sorted_dist_dic[i]]
+        class_count[vote_label] = class_count.get(vote_label, 0) + 1
+    sorted_class_count = sorted(class_count.items(), key=operator.itemgetter(1), reverse=True)
+    return sorted_class_count[0][0]
+
+
