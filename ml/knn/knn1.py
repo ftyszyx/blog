@@ -37,7 +37,7 @@ def dating_class_test():
     """
     hoRatio = 0.1
     # 从文件中加载数据
-    dating_data_mat, dating_labels = file2matrix('data/knn/datingTestSet2.txt')  # load data setfrom file
+    dating_data_mat, dating_labels = file2matrix('../data/knn/datingTestSet2.txt')  # load data setfrom file
     # 归一化数据
     norm_mat, ranges, min_vals = knn_lib.auto_norm(dating_data_mat)
     # m 表示数据的行数，即矩阵的第一维
