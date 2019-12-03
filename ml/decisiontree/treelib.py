@@ -1,6 +1,8 @@
 # coding: utf-8
 from math import log
+import operator
 
+#计算信息商
 def calc_cannon_ent(dataset):
     # 求list的长度，表示计算参与训练的数据量
     num_entries = len(dataset)
@@ -46,24 +48,6 @@ def split_data_set(data_set, index, value):
             # chop out index used for splitting
             # [:index]表示前index行，即若 index 为2，就是取 featVec 的前 index 行
             reducedFeatVec = featVec[:index]
-            '''
-            请百度查询一下： extend和append的区别
-            list.append(object) 向列表中添加一个对象object
-            list.extend(sequence) 把一个序列seq的内容添加到列表中
-            1、使用append的时候，是将new_media看作一个对象，整体打包添加到music_media对象中。
-            2、使用extend的时候，是将new_media看作一个序列，将这个序列和music_media序列合并，并放在其后面。
-            result = []
-            result.extend([1,2,3])
-            print(result)
-            result.append([4,5,6])
-            print(result)
-            result.extend([7,8,9])
-            print(result)
-            结果：
-            [1, 2, 3]
-            [1, 2, 3, [4, 5, 6]]
-            [1, 2, 3, [4, 5, 6], 7, 8, 9]
-            '''
             reducedFeatVec.extend(featVec[index+1:])
             # [index+1:]表示从跳过 index 的 index+1行，取接下来的数据
             # 收集结果值 index列为value的行【该行需要排除index列】
@@ -75,7 +59,7 @@ def split_data_set(data_set, index, value):
     # # -----------切分数据集的第二种方式 end------------------------------------
     return ret_data_set
 
-
+#获取最好的分节点
 def choose_best_feature_Split(dataset):
     """chooseBestFeatureToSplit(选择最好的特征)
     Args:
@@ -135,24 +119,13 @@ def majorityCnt(classList):
     sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
     # print('sortedClassCount:', sortedClassCount)
     return sortedClassCount[0][0]
-    # -----------majorityCnt的第一种方式 end------------------------------------
-
-    # # -----------majorityCnt的第二种方式 start------------------------------------
-    # major_label = Counter(classList).most_common(1)[0]
-    # return major_label
-    # # -----------majorityCnt的第二种方式 end------------------------------------
 
 
 def createTree(dataSet, labels):
-    classList = [example[-1] for example in dataSet]
-    # 如果数据集的最后一列的第一个值出现的次数=整个集合的数量，也就说只有一个类别，就只直接返回结果就行
-    # 第一个停止条件：所有的类标签完全相同，则直接返回该类标签。
-    # count() 函数是统计括号中的值在list中出现的次数
-    if classList.count(classList[0]) == len(classList):
+    classList = [example[-1] for example in dataSet]#获取结果
+    if classList.count(classList[0]) == len(classList):# 所有的结果都是一样的
         return classList[0]
-    # 如果数据集只有1列，那么最初出现label次数最多的一类，作为结果
-    # 第二个停止条件：使用完了所有特征，仍然不能将数据集划分成仅包含唯一类别的分组。
-    if len(dataSet[0]) == 1:
+    if len(dataSet[0]) == 1:  #没有条件，只有结果列，取结果出现最多的传为最终结果
         return majorityCnt(classList)
 
     # 选择最优的列，得到最优列对应的label含义
@@ -171,7 +144,7 @@ def createTree(dataSet, labels):
         # 求出剩余的标签label
         subLabels = labels[:]
         # 遍历当前选择特征包含的所有属性值，在每个数据集划分上递归调用函数createTree()
-        myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabels)
+        myTree[bestFeatLabel][value] = createTree(split_data_set(dataSet, bestFeat, value), subLabels)
         # print 'myTree', value, myTree
     return myTree
 
@@ -194,7 +167,7 @@ def classify(inputTree, featLabels, testVec):
     # 测试数据，找到根节点对应的label位置，也就知道从输入的数据的第几位来开始分类
     key = testVec[featIndex]
     valueOfFeat = secondDict[key]
-    print '+++', firstStr, 'xxx', secondDict, '---', key, '>>>', valueOfFeat
+    print('+++', firstStr, 'xxx', secondDict, '---', key, '>>>', valueOfFeat)
     # 判断分枝是否结束: 判断valueOfFeat是否是dict类型
     if isinstance(valueOfFeat, dict):
         classLabel = classify(valueOfFeat, featLabels, testVec)

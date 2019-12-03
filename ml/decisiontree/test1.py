@@ -1,6 +1,8 @@
 # coding: utf-8
-import  treelib;
-import decisionTreePlot as dtPlot
+import  sys
+sys.path.append(r'../../')
+import ml.decisiontree.treelib as treelib;
+import ml.decisiontree.decisionTreePlot as dtPlot
 
 def ContactLensesTest():
     """
@@ -17,6 +19,7 @@ def ContactLensesTest():
     # 解析数据，获得 features 数据
     lenses = [inst.strip().split('\t') for inst in fr.readlines()]
     # 得到数据的对应的 Labels
+    #数据对应的标签
     lensesLabels = ['age', 'prescript', 'astigmatic', 'tearRate']
     # 使用上面的创建决策树的代码，构造预测隐形眼镜的决策树
     lensesTree = treelib.createTree(lenses, lensesLabels)
