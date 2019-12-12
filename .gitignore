@@ -57,3 +57,7 @@ dkms.conf
 /ml/data
 /ml/ipython
 /ml/__pycache__
+/ml/bayes/data
+/ml/decisiontree/data
+/ml/knn/data
+/ml/logistic/data
