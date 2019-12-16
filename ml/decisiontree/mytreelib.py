@@ -1,6 +1,7 @@
 # coding: utf-8
 from math import log
 import operator
+import pickle
 
 #get shannon
 def calShannonEnt(dataSet):
@@ -78,4 +79,11 @@ def createTree(dataset,labels):
         myTree[bestFeatureLabel][value]=createTree(splitDataSet(dataset,bestFeature,value),sublabels)
     return myTree
 
+def storeTree(inputTree,filename):
+    fw=open(filename,'wb')
+    pickle.dump(inputTree,fw)
+    fw.close()
 
+def gradTree(filename):
+    fr=open(filename,'rb')
+    return pickle.load(fr)

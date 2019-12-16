@@ -12,4 +12,6 @@ def createDataSet():
 if __name__ == "__main__":
      mydat,labels=createDataSet()
      mytree=mytreelib.createTree(mydat,labels)
-     treeplot.createPlot()
+     mytreelib.storeTree(mytree,"test")
+     gettree=mytreelib.gradTree("test")
+     print(gettree)
