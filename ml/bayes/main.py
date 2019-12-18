@@ -6,7 +6,7 @@ import ml.bayes.lib as bayeslib
 
 # email spam
 def textParse(bigString):
-    listofTokens=re.split(r'\W*',bigString)
+    listofTokens=re.split(r'\W+',bigString)
     return [tok.lower() for tok in listofTokens if len(tok)>2]
 
 
@@ -25,25 +25,28 @@ def spamTest():
         classList.append(0)
     vocabList=bayeslib.createVocabList(docList)
 
-
-    trainingSet = range(50)
+    #test set
     testSet = []
     for i in range(10):
-        randIndex = int(random.uniform(0, len(trainingSet)))
-        testSet.append(trainingSet[randIndex])
+        randIndex = int(random.uniform(0, 51))
+        testSet.append(randIndex)
+    print("testset",testSet)
 
+    # train set
     trainMat = [];
     trainClasses = []
-    for docIndex in trainingSet:
+    for docIndex in range(50):
         trainMat.append(bayeslib.setOfWords2Vec(vocabList, docList[docIndex]))
         trainClasses.append(classList[docIndex])
+    #train
+    p0V, p1V, pSpam = bayeslib.trainNB0(trainMat, trainClasses)
 
-    p0V, p1V, pSpam = bayeslib.trainNB0((trainMat), array(trainClasses))
     errorCount = 0
     for docIndex in testSet:
         wordVector = bayeslib.setOfWords2Vec(vocabList, docList[docIndex])
-        if bayeslib.classifyNB(array(wordVector), p0V, p1V, pSpam) != classList[docIndex]:
-            print('   error : ' )
+        getres=bayeslib.classifyNB(array(wordVector), p0V, p1V, pSpam)
+        if getres!= classList[docIndex]:
+            print('   error : ',docIndex,getres, classList[docIndex])
             errorCount += 1
     print('the error rate is: ', float(errorCount) / len(testSet))
 
@@ -60,7 +63,5 @@ if __name__ == "__main__":
     # print(
     #     "{0} classified as :{1}".format(thisdoc,bayeslib.classifyNB(thisdoc,p0v,p1v,pab))
     # )
-
-
     spamTest()
 
