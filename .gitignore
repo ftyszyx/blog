@@ -61,4 +61,4 @@ dkms.conf
 /ml/decisiontree/data
 /ml/knn/data
 /ml/logistic/data
-*/__pycache__/
+__pycache__
