@@ -62,3 +62,5 @@ dkms.conf
 /ml/knn/data
 /ml/logistic/data
 __pycache__
+__pycache__
+/ml/bayes/__pycache__
