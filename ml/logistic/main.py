@@ -13,8 +13,8 @@ def loadDataSet():
         labelMat.append(int(lineArr[2]))
     return dataMat,labelMat
 
-def plotBestFit(wei):
-    weights = wei.getA()
+def plotBestFit(weights):
+    # weights = wei.getA()
     dataMat, labelMat = loadDataSet()
     dataArr = array(dataMat)
     n = shape(dataArr)[0]
@@ -42,5 +42,6 @@ def plotBestFit(wei):
 
 if __name__ == "__main__":
     datamat,labelmat=loadDataSet()
-    weight=logistic_lib.gradAscent(datamat,labelmat)
+    weight=logistic_lib.stocGradAscent1(datamat,labelmat)
+
     plotBestFit(weight)
