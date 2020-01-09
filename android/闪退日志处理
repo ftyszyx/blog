@@ -6,3 +6,12 @@ ndk-stack -sym .\apk_bin-1.10.051701-v295787514.symbols\arm64-v8a\  -dump .\ab_b
 adb logcat > crash.log
 ndk-stack -sym /Users/yangxin/Documents/devToos/java/android-ndk-r9d/samples/hello-jni/obj/local/armeabi-v7a -dump crash.log
  
+
+
+也可以直接用arm-linux-androideabi-addr2line 工具，在
+android-sdk\android-ndk-r16b\toolchains\aarch64-linux-android-4.9\prebuilt\windows-x86_64\bin
+目录 下：如果 是64位arm就是aarch64-linux-android-addr2line.exe 32位arm-linux-androideabi-addr2line
+参考：
+ https://support.unity3d.com/hc/en-us/articles/115000292166-Symbolicate-Android-crash
+命令：
+ ./arm-linux-androideabi-addr2line -f -C -e   /Symbols/armeabi-v7a/libunity.sym.so 0043a05c 0043a05c 0043a05c 0043a05c
