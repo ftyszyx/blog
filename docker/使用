@@ -9,3 +9,5 @@ docker container run -d --rm --name wordpressdb --env MYSQL_ROOT_PASSWORD=123456
 
 建立一个链接
 docker run --rm --name wordpress --volume "$PWD/":/var/www/html --link wordpressdb:mysql -p 9300:80 phpwithmysql
+
+

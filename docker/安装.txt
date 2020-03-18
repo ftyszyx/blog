@@ -63,3 +63,7 @@ docker info  查看加速器有没有生效
 自动脚本安装
 $ curl -fsSL https://get.docker.com -o get-docker.sh
 $ sudo sh get-docker.sh
+
+
+docker stop nginx
+docker rm nginx

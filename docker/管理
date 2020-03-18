@@ -1,6 +1,4 @@
-hub 地址：
- https://hub.docker.com
-
+ 
 登录
 docker login
 docker logout
@@ -18,6 +16,7 @@ docker run -it --rm \
     ubuntu:18.04 \
     bash
 
+
 docker run 就是运行容器的命令，具体格式我们会在 容器 一节进行详细讲解，我们这里简要的说明一下上面用到的参数。
 
 -it：这是两个参数，一个是 -i：交互式操作，一个是 -t 终端。我们这里打算进入 bash 执行一些命令并查看返回结果，因此我们需要交互式终端。
@@ -33,3 +32,38 @@ docker commit \
     --message "修改了默认网页" \
     webserver \
     nginx:v2
+
+删除镜像
+docker rmi java:8 
+
+列出容器
+docker ps
+列出所有容器
+docker ps -a
+停止容器
+docker stop containername
+强制停止容器
+docker kill $ContainerName(或者$ContainerId)
+启动已停止的容器
+docker start $ContainerName(或者$ContainerId) 
+
+
+一、私有docker仓库
+Docker Registry安装：
+docker run -d -p 5000:5000 --restart=always --name registry2 registry:2
+默认情况下，仓库会被创建在容器的 /var/lib/registry 目录下
+你可以通过 -v 参数来将镜像文件存放在本地的指定路径
+docker run -d \
+    -p 5000:5000 \
+    -v /opt/data/registry:/var/lib/registry \
+    registry
+
+ 因为 Docker 默认不允许非 HTTPS 方式推送镜像。我们可以通过 Docker 的配置选项来取消这个限制
+ 让Docker支持http上传镜像
+ echo '{ "insecure-registries":["192.168.1.62:5000"] }' > /etc/docker/daemon.json
+ 修改配置后需要使用如下命令使配置生效
+ systemctl daemon-reload
+
+ 重启：
+ systemctl stop docker
+systemctl start docker
