@@ -65,3 +65,6 @@ __pycache__
 __pycache__
 /ml/bayes/__pycache__
 /ml/svm/data
+
+__pycache__/
+*.idea/
