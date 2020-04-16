@@ -7,27 +7,15 @@ docker run -i -t -d -p 9000:80 onlyoffice/documentserver
 
 
 
- oneinstack一键搭建web环境 php
- wget http://mirrors.linuxeye.com/oneinstack-full.tar.gz && tar xzf oneinstack-full.tar.gz && ./oneinstack/install.sh --nginx_option 1 --php_option 7 --phpcache_option 1 --phpmyadmin  --db_option 2 --dbinstallmethod 1 --dbrootpwd oneinstack --reboot 
+ sudo docker run -i -t -d -p 9800:80 \
+    -v /app/onlyoffice/DocumentServer/logs:/mnt/onlyoffice/log  \
+    -v /app/onlyoffice/DocumentServer/data:/mnt/onlyoffice/data  \
+    -v /app/onlyoffice/DocumentServer/lib:/mnt/onlyoffice/lib \
+    -v /app/onlyoffice/DocumentServer/rabbitmq:/mnt/onlyoffice/rabbitmq \
+    -v /app/onlyoffice/DocumentServer/redis:/mnt/onlyoffice/redis \
+    -v /app/onlyoffice/DocumentServer/db:/mnt/onlyoffice/db  onlyoffice/documentserver
 
 
-Nginx install dir:              /usr/local/nginx
-
-Database install dir:           /usr/local/mysql
-Database data dir:              /data/mysql
-Database user:                  root
-Database password:              oneinstack
-
-PHP install dir:                /usr/local/php
-
-phpMyAdmin dir:                 /data/wwwroot/default/phpMyAdmin
-phpMyAdmin Control Panel URL:   http://172.16.0.10/phpMyAdmin
-
-Index URL:                      http://172.16.0.10/
-
-dbrootpwd='oneinstack'
-set password for root@localhost = password(‘123’);
-
-
+ 
 
 
