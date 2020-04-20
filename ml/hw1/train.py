@@ -38,12 +38,12 @@ for month in range(12):
 
 #print(x)
 #对x的特征做归一化，u=0
-meanx=np.mean(x,axis=0)
+mean_x=np.mean(x,axis=0)
 std_x=np.std(x,axis=0)
 for i in range(len(x)):
     for j in range(len(x[0])):
         if std_x[j]!=0:
-            x[i][j]=(x[i][j]-meanx[j])/std_x[j]
+            x[i][j]=(x[i][j]-mean_x[j])/std_x[j]
 
 
 #将数据分成训练和测试数据
@@ -53,4 +53,55 @@ x_validation=x[math.floor(len(x)*0.8):,:]
 y_validation=y[math.floor(len(y)*0.8):,:]
 
 #开始训练
-#y=wx+b==>
+#y=wx+b==>y=wx   x多加一维
+#lost=y_test-train_y
+#gradient=2*np.dot(
+dim=18*9+1
+w=np.zeros([dim,1])
+x=np.concatenate((np.ones([12*471,1]),x),axis=1).astype(float) #给x多加一维，值都为1
+learning_rate=100
+iter_time=1000
+adagrad=np.zeros([dim,1])
+eps=0.00000000001
+for t in range(iter_time):
+    loss=np.sqrt(np.sum(np.power(np.dot(x,w)-y,2)))/471/12
+    if(t%100==0):
+        print(str(t)+":"+str(loss))
+    gradient = 2 * np.dot(x.transpose(), np.dot(x, w) - y)
+    adagrad += gradient ** 2
+    w = w - learning_rate * gradient / np.sqrt(adagrad + eps)
+np.save('weight.npy', w)
+# print(w)
+
+#test 测试
+testdata=pd.read_csv('./test.csv',header = None, encoding = 'big5')
+testdata=testdata.iloc[:,2:]
+testdata[testdata=='NR']=0
+testdata=testdata.values
+test_x=np.empty([240,18*9],dtype=float)
+
+for i in range(240):
+    test_x[i,:]=testdata[18*i:18*(i+1),:].reshape(1,-1)
+
+mean_x=np.mean(test_x,axis=0)
+std_x=np.std(test_x,axis=0)
+for i in range(len(test_x)):
+    for j in range(len(test_x[0])):
+        if std_x[j] != 0:
+            test_x[i][j] = (test_x[i][j] - mean_x[j]) / std_x[j]
+test_x = np.concatenate((np.ones([240, 1]), test_x), axis = 1).astype(float)
+# w = np.load('weight.npy')
+ans_y = np.dot(test_x, w)
+# print(ans_y)
+
+import csv
+#保存数据到csv
+with open('submit.csv', mode='w', newline='') as submit_file:
+    csv_writer = csv.writer(submit_file)
+    header = ['id', 'value']
+    # print(header)
+    csv_writer.writerow(header)
+    for i in range(240):
+        row = ['id_' + str(i), ans_y[i][0]]
+        csv_writer.writerow(row)
+        # print(row)
