@@ -68,3 +68,8 @@ $ sudo sh get-docker.sh
 docker stop nginx
 docker rm nginx
 
+查看日志
+sudo docker logs mongo
+
+进入系统：
+sudo docker exec -it mongo bash
