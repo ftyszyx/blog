@@ -1,0 +1,3 @@
+关机
+shutdown -s -t 10
+shutdown -r -t 10
