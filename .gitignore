@@ -69,3 +69,5 @@ __pycache__
 __pycache__/
 *.idea/
 /ml/hw1/weight.npy
+/ml/keras/aclImdb_v1
+/ml/keras/aclImdb_v1.tar.gz

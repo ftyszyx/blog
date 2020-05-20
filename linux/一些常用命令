@@ -25,3 +25,4 @@ cat /proc/cpuinfo |more
  du -sh 查看当前目录的大小
  du file.log  查看指定文件的占用
  du -h test 查看test目录占用情况
+du -h --max-depth=1 查看当前目录下的文件夹大小
