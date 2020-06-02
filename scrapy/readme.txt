@@ -1,5 +1,6 @@
 1、新建一个工程
 scrapy startproject myproject
+
 2、生成spider
 scrapy genspider mydomain mydomain.com
 
