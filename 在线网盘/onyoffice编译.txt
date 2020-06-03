@@ -1,4 +1,0 @@
-通过docker环境编译
-git clone --recursive https://github.com/ONLYOFFICE/DocumentServer.git
-cd DocumentServer
-sudo docker run --rm -v $PWD:/var/lib/onlyoffice onlyoffice/documentserver-builder
