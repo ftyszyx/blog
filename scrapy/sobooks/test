@@ -1,0 +1,135 @@
+2020-06-03 15:55:52 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
+2020-06-03 15:55:52 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
+2020-06-03 15:55:52 [scrapy.utils.log] DEBUG: Using reactor: twisted.internet.selectreactor.SelectReactor
+2020-06-03 15:55:52 [scrapy.crawler] INFO: Overridden settings:
+{'BOT_NAME': 'sobooks',
+ 'LOG_FILE': 'test',
+ 'NEWSPIDER_MODULE': 'sobooks.spiders',
+ 'SPIDER_MODULES': ['sobooks.spiders']}
+2020-06-03 15:55:52 [scrapy.extensions.telnet] INFO: Telnet Password: 82b37b2d4ad1a4d6
+2020-06-03 15:55:52 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.logstats.LogStats']
+2020-06-03 15:55:53 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2020-06-03 15:55:53 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2020-06-03 15:55:53 [scrapy.middleware] INFO: Enabled item pipelines:
+['sobooks.pipelines.MysqlPipline']
+2020-06-03 15:55:53 [scrapy.core.engine] INFO: Spider opened
+2020-06-03 15:55:53 [sotag] INFO: connect mysql:sotag
+2020-06-03 15:55:53 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-06-03 15:55:53 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2020-06-03 15:55:55 [scrapy.core.engine] DEBUG: Crawled (403) <GET https://sobooks.cc/> (referer: None)
+2020-06-03 15:55:55 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response <403 https://sobooks.cc/>: HTTP status code is not handled or not allowed
+2020-06-03 15:55:55 [scrapy.core.engine] INFO: Closing spider (finished)
+2020-06-03 15:55:55 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 210,
+ 'downloader/request_count': 1,
+ 'downloader/request_method_count/GET': 1,
+ 'downloader/response_bytes': 4601,
+ 'downloader/response_count': 1,
+ 'downloader/response_status_count/403': 1,
+ 'elapsed_time_seconds': 2.267877,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2020, 6, 3, 7, 55, 55, 395267),
+ 'httperror/response_ignored_count': 1,
+ 'httperror/response_ignored_status_count/403': 1,
+ 'log_count/DEBUG': 1,
+ 'log_count/INFO': 12,
+ 'response_received_count': 1,
+ 'scheduler/dequeued': 1,
+ 'scheduler/dequeued/memory': 1,
+ 'scheduler/enqueued': 1,
+ 'scheduler/enqueued/memory': 1,
+ 'start_time': datetime.datetime(2020, 6, 3, 7, 55, 53, 127390)}
+2020-06-03 15:55:55 [scrapy.core.engine] INFO: Spider closed (finished)
+2020-06-03 16:05:56 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
+2020-06-03 16:05:56 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
+2020-06-03 16:05:56 [scrapy.utils.log] DEBUG: Using reactor: twisted.internet.selectreactor.SelectReactor
+2020-06-03 16:05:56 [scrapy.crawler] INFO: Overridden settings:
+{'BOT_NAME': 'sobooks',
+ 'LOG_FILE': 'test',
+ 'NEWSPIDER_MODULE': 'sobooks.spiders',
+ 'SPIDER_MODULES': ['sobooks.spiders']}
+2020-06-03 16:05:56 [scrapy.extensions.telnet] INFO: Telnet Password: a4b4ccebcd94b85e
+2020-06-03 16:05:56 [scrapy.middleware] INFO: Enabled extensions:
+['scrapy.extensions.corestats.CoreStats',
+ 'scrapy.extensions.telnet.TelnetConsole',
+ 'scrapy.extensions.logstats.LogStats']
+2020-06-03 16:05:57 [scrapy.middleware] INFO: Enabled downloader middlewares:
+['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
+ 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
+ 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
+ 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
+ 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
+ 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
+ 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
+ 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
+ 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
+ 'scrapy.downloadermiddlewares.stats.DownloaderStats']
+2020-06-03 16:05:57 [scrapy.middleware] INFO: Enabled spider middlewares:
+['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
+ 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
+ 'scrapy.spidermiddlewares.referer.RefererMiddleware',
+ 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
+ 'scrapy.spidermiddlewares.depth.DepthMiddleware']
+2020-06-03 16:05:57 [scrapy.middleware] INFO: Enabled item pipelines:
+['sobooks.pipelines.MysqlPipline']
+2020-06-03 16:05:57 [scrapy.core.engine] INFO: Spider opened
+2020-06-03 16:05:57 [sotag] INFO: connect mysql:sotag
+2020-06-03 16:05:57 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-06-03 16:05:57 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2020-06-03 16:05:58 [scrapy.core.engine] DEBUG: Crawled (200) <GET https://sobooks.cc/> (referer: None)
+2020-06-03 16:05:59 [sotag] INFO: get item:{'name': '小说'}
+2020-06-03 16:05:59 [sotag] INFO: getitem:sotag:{'name': '小说'}
+2020-06-03 16:05:59 [scrapy.core.scraper] ERROR: Error processing {'name': '小说'}
+Traceback (most recent call last):
+  File "f:\programdata\anaconda3\lib\site-packages\twisted\internet\defer.py", line 654, in _runCallbacks
+    current.result = callback(current.result, *args, **kw)
+  File "f:\programdata\anaconda3\lib\site-packages\scrapy\utils\defer.py", line 154, in f
+    return deferred_from_coro(coro_f(*coro_args, **coro_kwargs))
+  File "H:\mywork\blog\scrapy\sobooks\sobooks\pipelines.py", line 65, in process_item
+    (item['name'] ))
+  File "f:\programdata\anaconda3\lib\site-packages\pymysql\cursors.py", line 168, in execute
+    query = self.mogrify(query, args)
+  File "f:\programdata\anaconda3\lib\site-packages\pymysql\cursors.py", line 147, in mogrify
+    query = query % self._escape_args(args, conn)
+TypeError: not enough arguments for format string
+2020-06-03 16:05:59 [scrapy.core.engine] INFO: Closing spider (finished)
+2020-06-03 16:05:59 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
+{'downloader/request_bytes': 210,
+ 'downloader/request_count': 1,
+ 'downloader/request_method_count/GET': 1,
+ 'downloader/response_bytes': 9085,
+ 'downloader/response_count': 1,
+ 'downloader/response_status_count/200': 1,
+ 'elapsed_time_seconds': 1.551663,
+ 'finish_reason': 'finished',
+ 'finish_time': datetime.datetime(2020, 6, 3, 8, 5, 59, 88539),
+ 'log_count/DEBUG': 1,
+ 'log_count/ERROR': 1,
+ 'log_count/INFO': 13,
+ 'response_received_count': 1,
+ 'scheduler/dequeued': 1,
+ 'scheduler/dequeued/memory': 1,
+ 'scheduler/enqueued': 1,
+ 'scheduler/enqueued/memory': 1,
+ 'start_time': datetime.datetime(2020, 6, 3, 8, 5, 57, 536876)}
+2020-06-03 16:05:59 [scrapy.core.engine] INFO: Spider closed (finished)
