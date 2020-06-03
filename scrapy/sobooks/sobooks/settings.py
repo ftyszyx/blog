@@ -91,14 +91,14 @@ ITEM_PIPELINES = {
 
 
 #mysql设置
-mysql_setting={
+MYSQL_SETTING={
     "host":"127.0.0.1",
     "port":3306,
     "user":"root",
     "db":"sobooks",
     "passwd":"",
 }
-
-LOG_LEVEL="DEBUG"
+LANGUAGE = "PHP"
+LOG_LEVEL="INFO"
 LOG_STDOUT=False
-# LOG_FILE="test"
+LOG_FILE="test"
