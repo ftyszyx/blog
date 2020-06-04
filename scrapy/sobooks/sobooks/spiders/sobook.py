@@ -4,10 +4,26 @@ from scrapy.spidermiddlewares.httperror import HttpError
 from twisted.internet.error import DNSLookupError
 from twisted.internet.error import TimeoutError, TCPTimedOutError
 import json
+#返回403：https://assets.hcaptcha.com/captcha/v1/32b4a85/hcaptcha.min.js
+#https://hcaptcha.com/getcaptcha
+#set cookie:__cfduid=dec7479479b26e5d6cee874a0e98622081591265743; expires=Sat, 04-Jul-20 10:15:43 GMT; path=/; domain=.hcaptcha.com; HttpOnly; SameSite=Lax; Secure
+
 #读取book
 class authorspider(scrapy.Spider):
     name = "sobook"
-    start_urls = ['https://sobooks.cc/']
+    #start_urls = ['https://sobooks.cc/']
+    custom_settings = {
+        "DEFAULT_REQUEST_HEADERS": {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
+            "cookie": "__cfduid=decf3f7387e8f965b3b3374b97c3597e81591265730; cf_clearance=1f4a1946bdc288263bc9d4d5aa5b7737792f5690-1591265783-0-250; UM_distinctid=1727ed4f41233-0e5192d707c6b1-f7d1d38-2a3000-1727ed4f413395; CNZZDATA1259444303=212689518-1591264504-https%253A%252F%252Fsobooks.cc%252F%7C1591264504; __gads=ID=ac9c45f7f76d4c0c:T=1591265784:S=ALNI_MblTn46PW05HdaEw7TOYp9aSjd2Bg"
+        }
+    }
+    def start_requests(self):
+        url='https://sobooks.cc/'
+        yield scrapy.Request(url=url, callback=self.parse,meta={"max_retry_times":3},errback=self.errback_httpbin)
+
 
     def parse(self, response):
         for a in response.css('li.menu-item a'):
@@ -29,36 +45,64 @@ class authorspider(scrapy.Spider):
         booitem = BooksItem()
         booktype = response.meta.get('booktype')
         bookinfo=response.css('div.book-info')
-        booitem["type"] = booktype
         booitem["img"] = bookinfo.css('div.bookpic img::attr(src)').get().strip()
-        booitem["title"]=bookinfo.css('ul li:nth-child(1)::text').get().strip()
-        booitem["isbn"] = bookinfo.css('ul li:nth-last-child(1)::text').get().strip()
-        booitem["desc"]=response.css('div.article-content p:nth-child(2)::text').get().strip()
+        allli=bookinfo.css('li')
         tagArr = []
-        for tag in bookinfo.css('ul li:nth-child(4) a'):
-            tagArr.append(tag.css('::text').get().strip())
-        booitem["tag"] = ",".join(tagArr)
+        for li in allli:
+            title=li.css('strong::text').get().strip(':：')
+            if title=="标签":
+                for tag in li.css('a'):
+                    tagArr.append(tag.css('::text').get().strip())
+                booitem["tag"] = ",".join(tagArr)
+            elif title=="作者":
+                booitem["author"] = li.css('::text').get().strip()
+            elif title=="书名":
+                booitem["title"] = li.css('::text').get().strip()
+            elif title=="ISBN":
+                booitem["isbn"] = li.css('::text').get().strip()
 
-        formtag=response.css('div.e-secret')
-        formurl=formtag.css('form::attr(action)').get().strip()
-        formdata = {'e_secret_key': '666'}
-        yield scrapy.Request(
-            formurl,
-            body=json.dumps(formdata),
-            method="POST",
-            headers={'Content-Type': 'application/json'},
-            callback=self.pasrse_download,
-            meta=booitem
-        )
+        booitem["type"] = booktype
+        booitem["desc"]=response.css('article.article-content').extract()[0]
+        #获取下载地址
+        formtag=response.css('div.e-secret form')
+        if len(formtag)>0:
+            formurl=formtag.css('::attr(action)').get().strip()
+            formdata = 'e_secret_key=666'
+            yield scrapy.Request(
+                formurl,
+                body=formdata,
+                method="POST",
+                headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                callback=self.pasrse_download,
+                meta=booitem
+            )
+        else:
+            yield self.pasrse_download(response)
 
 
     def pasrse_download(self,response):
         booitem = response.meta
+        downloadtable=response.css('table.dltable a')
+        if len(downloadtable)>0:
+            #是表格形式
+            for downa in downloadtable:
+                title=downa.css('::text').get().strip()
+                linkurl=downa.css('::attr(href)').get().strip()
+                if title.startswith("百度"):
+                    booitem["baidu_url"] = linkurl
+                elif title.startswith("城通"):
+                    booitem["chentong_url"] = linkurl
+                elif title.startswith("蓝奏"):
+                    booitem["lanzou_url"] = linkurl
+            if  booitem["baidu_url"] is not None:
+                booitem["baidu_code"] =response.css('div.e-secret b::text').get().strip()
+            yield booitem
+            return
+
         box=response.css('div.e-secret b')
-        boxtext=box.css('::text').get().strip()
-        booitem["baidu_code"]=boxtext
-        booitem["baidu_url"] = box.css('a:nth-last-child(1)::attr(href)').get()
-        booitem["lanzou_url"] = box.css('a:nth-last-child(2)::attr(href)').get()
+        alla=box.css('a')
+        alltext=box.css('::text')
+
         yield booitem
 
 
