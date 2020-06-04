@@ -1,3 +1,0 @@
- SLA3d打印机  激光选择性固化 精度高
- SLS（Selective Laser Sintering）3d打印机  可以打金属
- 熔融挤压堆积成型（FDM—Fused Deposition Modeling）

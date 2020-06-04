@@ -1,3 +1,0 @@
-每次打开新tab不自动关掉旧tab
-"workbench.editor.enablePreview": false and 
-"workbench.editor. enablePreviewFromQuickOpen": false to your settings.

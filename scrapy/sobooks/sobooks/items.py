@@ -17,6 +17,7 @@ class BooksItem(scrapy.Item):
     desc=scrapy.Field()
     baidu_url=scrapy.Field()
     baidu_code=scrapy.Field()
+    lanzou_url = scrapy.Field()
     isbn=scrapy.Field()
     tag=scrapy.Field()
     pass

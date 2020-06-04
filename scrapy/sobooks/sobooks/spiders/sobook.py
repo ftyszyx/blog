@@ -3,7 +3,7 @@ from sobooks.items import BooksItem
 from scrapy.spidermiddlewares.httperror import HttpError
 from twisted.internet.error import DNSLookupError
 from twisted.internet.error import TimeoutError, TCPTimedOutError
-
+import json
 #读取book
 class authorspider(scrapy.Spider):
     name = "sobook"
@@ -19,8 +19,11 @@ class authorspider(scrapy.Spider):
         booktype = response.meta.get('booktype')
         for booka in response.css('div.card-item a'):
             yield response.follow(booka, callback=self.parse_page, meta={"booktype": booktype})
+        pageinfo=response.css('div.pagination ul')
 
-
+        next_page = pageinfo.css('li.next-page a::attr(href)').get()
+        if next_page is not None:
+            yield response.follow(next_page, callback=self.parse_page, meta={"booktype": booktype})
 
     def parse_page(self,response):
         booitem = BooksItem()
@@ -30,11 +33,33 @@ class authorspider(scrapy.Spider):
         booitem["img"] = bookinfo.css('div.bookpic img::attr(src)').get().strip()
         booitem["title"]=bookinfo.css('ul li:nth-child(1)::text').get().strip()
         booitem["isbn"] = bookinfo.css('ul li:nth-last-child(1)::text').get().strip()
-        booitem["desc"]=response.css('div.article-content p:nth-child(2)::text')
-        yield  bookitem
+        booitem["desc"]=response.css('div.article-content p:nth-child(2)::text').get().strip()
+        tagArr = []
+        for tag in bookinfo.css('ul li:nth-child(4) a'):
+            tagArr.append(tag.css('::text').get().strip())
+        booitem["tag"] = ",".join(tagArr)
 
-    def parse_book(self,response):
+        formtag=response.css('div.e-secret')
+        formurl=formtag.css('form::attr(action)').get().strip()
+        formdata = {'e_secret_key': '666'}
+        yield scrapy.Request(
+            formurl,
+            body=json.dumps(formdata),
+            method="POST",
+            headers={'Content-Type': 'application/json'},
+            callback=self.pasrse_download,
+            meta=booitem
+        )
 
+
+    def pasrse_download(self,response):
+        booitem = response.meta
+        box=response.css('div.e-secret b')
+        boxtext=box.css('::text').get().strip()
+        booitem["baidu_code"]=boxtext
+        booitem["baidu_url"] = box.css('a:nth-last-child(1)::attr(href)').get()
+        booitem["lanzou_url"] = box.css('a:nth-last-child(2)::attr(href)').get()
+        yield booitem
 
 
     #错误处理
