@@ -31,7 +31,8 @@ CONCURRENT_REQUESTS = 1
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-#COOKIES_ENABLED = False
+COOKIES_ENABLED = True#是否启用cookies middleware。如果关闭，cookies将不会发送给web server。
+#COOKIES_DEBUG=True#如果启用，Scrapy将记录所有在request(Cookie 请求头)发送的cookies及response接收到的cookies(Set-Cookie 接收头)。
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False

@@ -21,6 +21,7 @@ class BooksItem(scrapy.Item):
     chentong_url=scrapy.Field()
     isbn=scrapy.Field()
     tag=scrapy.Field()
+
     pass
 
 #标签

@@ -6,10 +6,14 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import scrapy
 import pymysql.cursors
+from sobooks.items import TagsItem
 class SobooksPipeline(object):
     def process_item(self, item, spider):
         return item
 
+TABLE_TAG="book_tags"
+TABLE_TYPE="book_types"
+TABLE_BOOK="books"
 
 class MysqlPipline(object):
     all_book_tags={}
@@ -30,9 +34,9 @@ class MysqlPipline(object):
         if(self.connect==None):
             spider.logger.error("connect mysql err")
         # 通过cursor执行增删查改
-        if (spider.name == "sobooks" or spider.name=="sotag"or spider.name=="sobooktype"):
+        if (spider.name == "sobook" or spider.name=="sotag"or spider.name=="sobooktype"):
             with self.connect.cursor() as cursor:
-                cursor.execute(""" select * from book_tags """)
+                cursor.execute(""" select * from {} """.format(TABLE_TAG))
                 results=cursor.fetchall()
                 for row in results:
                     self.all_book_tags[row[1]]=row[0]
@@ -40,20 +44,74 @@ class MysqlPipline(object):
                 spider.logger.info("get all_book_types:%s",self.all_book_tags)
 
             with self.connect.cursor() as cursor:
-                cursor.execute(""" select * from book_types """)
+                cursor.execute(""" select * from {} """.format(TABLE_TYPE))
                 results=cursor.fetchall()
                 for row in results:
                     self.all_book_types[row[1]]=row[0]
                 self.connect.commit()
                 spider.logger.info("get alltags:%s", self.all_book_types)
 
+
+    def addOneType(self,item):
+        typename = item['name']
+        with self.connect.cursor() as cursor:
+            cursor.execute("""insert into {} (name) value (%s) """.format(TABLE_TYPE), (typename))
+            # 提交sql语句
+            self.connect.commit()
+
+    def addOneTag(self, item):
+        tagname = item['name']
+        with self.connect.cursor() as cursor:
+            cursor.execute("""insert into {} (name) value (%s) """.format(TABLE_TAG), (tagname))
+            # 提交sql语句
+            self.connect.commit()
+
+
+
+    def addOneBook(self,item):
+        baiduurl = item.get('baidu_url', '')
+        baidu_code = item.get('baidu_code', '')
+        isbn = item.get('isbn', '')
+        lanzou_url = item.get('lanzou_url', '')
+        chentong_url = item.get('chentong_url', '')
+        tagstr = self.getbooktag(item["tag"])
+        typestr = self.get_book_types(item["type"])
+        imgstr=item.get("img","")
+        desc = item.get('desc', '')
+        try:
+            with self.connect.cursor() as cursor:
+                cursor.execute(
+                    """insert into {} (title, desc, author, type, img, baidu_url, baidu_code,isbn,tags,lanzou_url,chentong_url)
+                    value (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""".format(TABLE_BOOK),
+                    (item['title'], desc, item['author'], typestr, imgstr, baiduurl, baidu_code, isbn, tagstr,
+                     lanzou_url, chentong_url))
+                # 提交sql语句
+                self.connect.commit()
+                #scrapy.Item.get()
+        except Exception as e:
+            raise scrapy.exceptions.CloseSpider(reason='sqlerr')
+            return false
+
     #获取tag
     def getbooktag(self,tags):
-        arr=tags.split(' ')
+        arr=tags.split(',')
         tagids=[]
         for tagname in arr:
-            tagids.append(self.all_book_tags[tagname])
-        return ",".join(tagids)
+            if tagname in self.all_book_tags:
+                tagids.append(self.all_book_tags[tagname])
+            else:
+                tagitem=TagsItem()
+                tagitem["name"]=tagname
+                self.addOneTag(tagitem)
+                with self.connect.cursor() as cursor:
+                    cursor.execute("""select * from {} where `name`=%s""".format(TABLE_TAG), (tagname))
+                    # 提交sql语句
+                    results = cursor.fetchone()
+                    tagid=results["id"]
+                    tagids.append(tagid)
+                    self.all_book_tags[tagid] =tagname
+                    self.connect.commit()
+        return ",".join([str(a) for a in tagids])
 
     def get_book_types(self,book_type):
         if book_type in self.all_book_types:
@@ -62,31 +120,18 @@ class MysqlPipline(object):
 
     def process_item(self, item, spider):
         spider.logger.info("%s process_item:%s", spider.name,item)
-        if(spider.name=="sobooks"):
-            with self.connect.cursor() as cursor:
-                cursor.execute(
-                    """insert into books (title, desc, author, type, img, baidu_url, baidu_code,isbn,tags,lanzou_url,chentong_url)
-                    value (%s, %s,%s, %s,%s, %s,%s, %s,%s)""",
-                    (item['title'], item['desc'], item['author'], self.get_book_types(item['type']), item['img'],
-                     item['baidu_url'],item['baidu_code'],item['isbn'],self.getbooktag(item["tag"],item['lanzou_url'],item['chentong_url'])))
-                # 提交sql语句
-                self.connect.commit()
+        if(spider.name=="sobook"):
+            self.addOneBook(item)
         elif(spider.name=="sotag"):
             tagname=item['name']
             if tagname in self.all_book_tags:
                 spider.logger.info("tag exit:%s",tagname)
             else:
-                with self.connect.cursor() as cursor:
-                    cursor.execute("""insert into book_tags (name) value (%s) """,(tagname))
-                    # 提交sql语句
-                    self.connect.commit()
+                self.addOneTag(item)
         elif (spider.name == "sobooktype"):
             typename = item['name']
             if typename in self.all_book_types:
                 spider.logger.info("type exit:%s", typename)
             else:
-                with self.connect.cursor() as cursor:
-                    cursor.execute("""insert into book_types (name) value (%s) """, (typename))
-                    # 提交sql语句
-                    self.connect.commit()
+                self.addOneType(item)
         return  item

@@ -1,139 +1,6 @@
-2020-06-04 17:47:54 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
-2020-06-04 17:47:54 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
-2020-06-04 17:47:54 [scrapy.crawler] INFO: Overridden settings:
-{'BOT_NAME': 'sobooks',
- 'LOG_FILE': 'test.log',
- 'LOG_LEVEL': 'INFO',
- 'NEWSPIDER_MODULE': 'sobooks.spiders',
- 'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408, 520],
- 'SPIDER_MODULES': ['sobooks.spiders'],
- 'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-               '(KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
-2020-06-04 17:47:54 [scrapy.extensions.telnet] INFO: Telnet Password: 9e0dd81cedbb0c7f
-2020-06-04 17:47:54 [scrapy.middleware] INFO: Enabled extensions:
-['scrapy.extensions.corestats.CoreStats',
- 'scrapy.extensions.telnet.TelnetConsole',
- 'scrapy.extensions.logstats.LogStats']
-2020-06-04 17:47:55 [scrapy.middleware] INFO: Enabled downloader middlewares:
-['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
- 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
- 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
- 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
- 'sobooks.middlewares.SobooksDownloaderMiddleware',
- 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
- 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
- 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
- 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
- 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
- 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
- 'scrapy.downloadermiddlewares.stats.DownloaderStats']
-2020-06-04 17:47:55 [scrapy.middleware] INFO: Enabled spider middlewares:
-['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
- 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
- 'scrapy.spidermiddlewares.referer.RefererMiddleware',
- 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
- 'scrapy.spidermiddlewares.depth.DepthMiddleware']
-2020-06-04 17:47:55 [scrapy.middleware] INFO: Enabled item pipelines:
-['sobooks.pipelines.MysqlPipline']
-2020-06-04 17:47:55 [scrapy.core.engine] INFO: Spider opened
-2020-06-04 17:47:55 [sobook] INFO: sobook connect mysql:{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'db': 'sobooks', 'passwd': ''}
-2020-06-04 17:47:55 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
-2020-06-04 17:47:55 [sobook] INFO: Spider opened: sobook
-2020-06-04 17:47:55 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
-2020-06-04 17:48:05 [scrapy.downloadermiddlewares.retry] ERROR: Gave up retrying <GET https://sobooks.cc/> (failed 11 times): 520 Unknown Status
-2020-06-04 17:48:05 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response <520 https://sobooks.cc/>: HTTP status code is not handled or not allowed
-2020-06-04 17:48:05 [scrapy.core.engine] INFO: Closing spider (finished)
-2020-06-04 17:48:05 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
-{'downloader/request_bytes': 4682,
- 'downloader/request_count': 11,
- 'downloader/request_method_count/GET': 11,
- 'downloader/response_bytes': 58519,
- 'downloader/response_count': 11,
- 'downloader/response_status_count/520': 11,
- 'elapsed_time_seconds': 10.064977,
- 'finish_reason': 'finished',
- 'finish_time': datetime.datetime(2020, 6, 4, 9, 48, 5, 717985),
- 'httperror/response_ignored_count': 1,
- 'httperror/response_ignored_status_count/520': 1,
- 'log_count/ERROR': 1,
- 'log_count/INFO': 13,
- 'response_received_count': 1,
- 'retry/count': 10,
- 'retry/max_reached': 1,
- 'retry/reason_count/520 Unknown Status': 10,
- 'scheduler/dequeued': 11,
- 'scheduler/dequeued/memory': 11,
- 'scheduler/enqueued': 11,
- 'scheduler/enqueued/memory': 11,
- 'start_time': datetime.datetime(2020, 6, 4, 9, 47, 55, 653008)}
-2020-06-04 17:48:05 [scrapy.core.engine] INFO: Spider closed (finished)
-2020-06-04 18:11:53 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
-2020-06-04 18:11:53 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
-2020-06-04 18:11:53 [scrapy.crawler] INFO: Overridden settings:
-{'BOT_NAME': 'sobooks',
- 'LOG_FILE': 'test.log',
- 'LOG_LEVEL': 'INFO',
- 'NEWSPIDER_MODULE': 'sobooks.spiders',
- 'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408, 520],
- 'SPIDER_MODULES': ['sobooks.spiders'],
- 'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-               '(KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
-2020-06-04 18:11:53 [scrapy.extensions.telnet] INFO: Telnet Password: dbda1b8586740768
-2020-06-04 18:11:53 [scrapy.middleware] INFO: Enabled extensions:
-['scrapy.extensions.corestats.CoreStats',
- 'scrapy.extensions.telnet.TelnetConsole',
- 'scrapy.extensions.logstats.LogStats']
-2020-06-04 18:11:53 [scrapy.middleware] INFO: Enabled downloader middlewares:
-['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
- 'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
- 'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
- 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware',
- 'sobooks.middlewares.SobooksDownloaderMiddleware',
- 'scrapy.downloadermiddlewares.retry.RetryMiddleware',
- 'scrapy.downloadermiddlewares.redirect.MetaRefreshMiddleware',
- 'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware',
- 'scrapy.downloadermiddlewares.redirect.RedirectMiddleware',
- 'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
- 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
- 'scrapy.downloadermiddlewares.stats.DownloaderStats']
-2020-06-04 18:11:53 [scrapy.middleware] INFO: Enabled spider middlewares:
-['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
- 'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
- 'scrapy.spidermiddlewares.referer.RefererMiddleware',
- 'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
- 'scrapy.spidermiddlewares.depth.DepthMiddleware']
-2020-06-04 18:11:53 [scrapy.middleware] INFO: Enabled item pipelines:
-['sobooks.pipelines.MysqlPipline']
-2020-06-04 18:11:53 [scrapy.core.engine] INFO: Spider opened
-2020-06-04 18:11:53 [sobook] INFO: sobook connect mysql:{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'db': 'sobooks', 'passwd': ''}
-2020-06-04 18:11:53 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
-2020-06-04 18:11:53 [sobook] INFO: Spider opened: sobook
-2020-06-04 18:11:53 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
-2020-06-04 18:11:55 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response <403 https://sobooks.cc/>: HTTP status code is not handled or not allowed
-2020-06-04 18:11:55 [scrapy.core.engine] INFO: Closing spider (finished)
-2020-06-04 18:11:55 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
-{'downloader/request_bytes': 372,
- 'downloader/request_count': 1,
- 'downloader/request_method_count/GET': 1,
- 'downloader/response_bytes': 5193,
- 'downloader/response_count': 1,
- 'downloader/response_status_count/403': 1,
- 'elapsed_time_seconds': 1.350309,
- 'finish_reason': 'finished',
- 'finish_time': datetime.datetime(2020, 6, 4, 10, 11, 55, 162813),
- 'httperror/response_ignored_count': 1,
- 'httperror/response_ignored_status_count/403': 1,
- 'log_count/INFO': 13,
- 'response_received_count': 1,
- 'scheduler/dequeued': 1,
- 'scheduler/dequeued/memory': 1,
- 'scheduler/enqueued': 1,
- 'scheduler/enqueued/memory': 1,
- 'start_time': datetime.datetime(2020, 6, 4, 10, 11, 53, 812504)}
-2020-06-04 18:11:55 [scrapy.core.engine] INFO: Spider closed (finished)
-2020-06-04 18:33:53 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
-2020-06-04 18:33:53 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
-2020-06-04 18:33:53 [scrapy.crawler] INFO: Overridden settings:
+2020-06-05 16:02:35 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
+2020-06-05 16:02:35 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
+2020-06-05 16:02:35 [scrapy.crawler] INFO: Overridden settings:
 {'BOT_NAME': 'sobooks',
  'CONCURRENT_REQUESTS': 1,
  'LOG_FILE': 'test.log',
@@ -143,12 +10,12 @@
  'SPIDER_MODULES': ['sobooks.spiders'],
  'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
                '(KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
-2020-06-04 18:33:53 [scrapy.extensions.telnet] INFO: Telnet Password: 8a15182fc996b09e
-2020-06-04 18:33:53 [scrapy.middleware] INFO: Enabled extensions:
+2020-06-05 16:02:35 [scrapy.extensions.telnet] INFO: Telnet Password: 7e6f916cdbff9979
+2020-06-05 16:02:35 [scrapy.middleware] INFO: Enabled extensions:
 ['scrapy.extensions.corestats.CoreStats',
  'scrapy.extensions.telnet.TelnetConsole',
  'scrapy.extensions.logstats.LogStats']
-2020-06-04 18:33:53 [scrapy.middleware] INFO: Enabled downloader middlewares:
+2020-06-05 16:02:35 [scrapy.middleware] INFO: Enabled downloader middlewares:
 ['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
  'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
  'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
@@ -161,44 +28,25 @@
  'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
  'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
  'scrapy.downloadermiddlewares.stats.DownloaderStats']
-2020-06-04 18:33:53 [scrapy.middleware] INFO: Enabled spider middlewares:
+2020-06-05 16:02:35 [scrapy.middleware] INFO: Enabled spider middlewares:
 ['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
  'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
  'scrapy.spidermiddlewares.referer.RefererMiddleware',
  'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
  'scrapy.spidermiddlewares.depth.DepthMiddleware']
-2020-06-04 18:33:53 [scrapy.middleware] INFO: Enabled item pipelines:
+2020-06-05 16:02:35 [scrapy.middleware] INFO: Enabled item pipelines:
 ['sobooks.pipelines.MysqlPipline']
-2020-06-04 18:33:53 [scrapy.core.engine] INFO: Spider opened
-2020-06-04 18:33:53 [sobook] INFO: sobook connect mysql:{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'db': 'sobooks', 'passwd': ''}
-2020-06-04 18:33:53 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
-2020-06-04 18:33:53 [sobook] INFO: Spider opened: sobook
-2020-06-04 18:33:53 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
-2020-06-04 18:33:54 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response <403 https://sobooks.cc/>: HTTP status code is not handled or not allowed
-2020-06-04 18:33:54 [scrapy.core.engine] INFO: Closing spider (finished)
-2020-06-04 18:33:54 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
-{'downloader/request_bytes': 402,
- 'downloader/request_count': 1,
- 'downloader/request_method_count/GET': 1,
- 'downloader/response_bytes': 5256,
- 'downloader/response_count': 1,
- 'downloader/response_status_count/403': 1,
- 'elapsed_time_seconds': 1.401282,
- 'finish_reason': 'finished',
- 'finish_time': datetime.datetime(2020, 6, 4, 10, 33, 54, 885639),
- 'httperror/response_ignored_count': 1,
- 'httperror/response_ignored_status_count/403': 1,
- 'log_count/INFO': 13,
- 'response_received_count': 1,
- 'scheduler/dequeued': 1,
- 'scheduler/dequeued/memory': 1,
- 'scheduler/enqueued': 1,
- 'scheduler/enqueued/memory': 1,
- 'start_time': datetime.datetime(2020, 6, 4, 10, 33, 53, 484357)}
-2020-06-04 18:33:54 [scrapy.core.engine] INFO: Spider closed (finished)
-2020-06-04 18:39:49 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
-2020-06-04 18:39:49 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
-2020-06-04 18:39:49 [scrapy.crawler] INFO: Overridden settings:
+2020-06-05 16:02:35 [scrapy.core.engine] INFO: Spider opened
+2020-06-05 16:02:35 [sobook] INFO: sobook connect mysql:{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'db': 'sobooks', 'passwd': ''}
+2020-06-05 16:02:42 [sobook] INFO: get all_book_types:{'小说': 1, '文学': 2, '历史': 3, '日本': 4, '管理': 5, '科普': 6, '推理': 7, '社会': 8, '传记': 9, '经济': 10, '悬疑': 11, '美国': 12, '哲学': 13, '心理': 14, '金融': 15, '商业': 16, '随笔': 17, '经典': 18, '思维': 19, '投资': 20, '文化': 21, '科幻': 22, '励志': 23, '成长': 24, '英国': 25, '中国': 26, '政治': 27, '纪实': 28, '艺术': 29, '生活': 30, '职场': 31, '科学': 32, '互联网': 33, '漫画': 34, '散文': 35, '法国': 36, '股票': 37, '奇幻': 38, '营销': 39, '二战': 40, '战争': 41, '德国': 42, '创业': 43, '女性': 44, '军事': 45, '名著': 46, '学习': 47, '爱情': 48, '人物': 49, '世界': 50, '绘本': 51, '理财': 52, '教育': 53, '国学': 54}
+2020-06-05 16:02:42 [sobook] INFO: get alltags:{'小说文学': 1, '历史传记': 2, '人文社科': 3, '励志成功': 4, '经济管理': 5, '学习教育': 6, '生活时尚': 7, '英文原版': 8}
+2020-06-05 16:02:42 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-06-05 16:02:42 [sobook] INFO: Spider opened: sobook
+2020-06-05 16:02:42 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2020-06-05 16:03:10 [sobook] INFO: sobook process_item:{'img': 'https://img9.doubanio.com/lpic/s29251425.jpg', 'title': '书名：', 'author': '作者：', 'tag': '小说,文学,美国', 'isbn': 'ISBN：', 'type': '小说文学', 'desc': '<article class="article-content"> <div class="book-info"> <div class="book-left"> <div class="item"> <div class="bookpic"> <img title="晚风如诉" alt="晚风如诉" src="https://img9.doubanio.com/lpic/s29251425.jpg"> </div> <div class="bookinfo"> <ul> <li><strong>书名：</strong>晚风如诉</li> <li><strong>作者：</strong>肯特・哈鲁夫</li> <li><strong>浏览：</strong>663次</li> <li><strong>标签：</strong><a href="https://sobooks.cc/books/tag/%e5%b0%8f%e8%af%b4" rel="tag">小说</a> <a href="https://sobooks.cc/books/tag/%e6%96%87%e5%ad%a6" rel="tag">文学</a> <a href="https://sobooks.cc/books/tag/%e7%be%8e%e5%9b%bd" rel="tag">美国</a></li> <li><strong>时间：</strong>2020-06-04</li> <li><strong>评分：</strong><b class="dbpf dbpf8"></b></li> <li><strong>ISBN：</strong>9787550276833</li> <ul> </ul></ul></div> </div> </div> <div class="book-right"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2905666642206607" data-ad-slot="2940101100" data-ad-format="auto" data-full-width-responsive="true"></ins><script> (adsbygoogle = window.adsbygoogle || []).push({});</script></div> </div> <h2>内容简介</h2><p>迈入迟暮之年的爱迪．穆尔和路易．沃特斯是科罗拉多霍尔特小镇的邻居。爱迪已经70岁，住在霍尔特小镇44年了，她丧夫守寡多年；路易也差不多年纪，丧妻后独自一个人在小镇上生活。虽然两人的家只有一街之隔，但爱迪和路易并不是很熟的邻居，更称不上是朋友，只是偶尔在街道上偶遇时会示 意打个招呼。</p><p>直到有一天，爱迪大胆地找到路易问他是否愿意晚上和她一起睡觉，打发寂寞时光，故事由此展开。</p><p>两位失去人生伴侣的邻居每天晚上同枕对话，白天的时候路易待在自己的家里做自己想做的事，晚上的时候他会走去爱迪的家陪她聊天睡觉，隔天早上再走回自己的家。两人发现他们有谈不完的话题。他们倾诉过去、死去的爱人、年轻时的梦想、和孩子的关系、曾经做过的蠢事……</p><p>霍尔特小镇是个又小又封闭的乡下地方，每个人特别关心别人发生什么事，爱迪与路易很快就引来镇上居民的闲言闲语，不过两人并不理会别人的看法。关于年老这件事的好处之一就是你不用去在乎别人是怎么想你的。然而，这样一段不伦恋却遭到爱迪儿子的抗拒。他以不让爱迪见自己孙子为筹码，威胁自己的母亲，爱迪被迫搬离小镇，两位老人失去了彼此，但灵魂对话就此结束了吗？</p><p>这个优美的故事讲的是友谊到爱情的过程，就算是人再怎么老，他们还是拥有学习和成长的空间。作者肯特哈鲁夫像是慈祥的老爷爷看着他<a href="https://sobooks.cc/books/tag/%e5%b0%8f%e8%af%b4" title="查看更多关于小说的文章" target="_blank">小说</a>里的角色的一举一动，只是远远地观察，不带批判地观察。率真的文字清澈透明、精简有力，是哈鲁夫留给读者细细品尝的人生。</p><p>(按:当肯特哈鲁夫在写《晚风如诉》他已知道自己得了绝症来日不多，这本<a href="https://sobooks.cc/books/tag/%e5%b0%8f%e8%af%b4" title="查看更多关于小说的文章" target="_blank">小说</a>由他的遗孀帮他完成编辑)</p><h2>作者简介</h2><p>肯特・哈鲁夫，生于<a href="https://sobooks.cc/books/tag/%e7%be%8e%e5%9b%bd" title="查看更多关于美国的文章" target="_blank">美国</a>科罗拉多州，1973年取得爱荷华大学(University of Iowa)爱荷华作家工作坊创作硕士学位(MFA)。</p><p>在成位作家之前，肯特哈鲁夫曾从事各种不同的工作人生阅历非常丰富，在科罗拉多州养过鸡、怀俄明州当过建筑工人、在丹佛市康复医院工作 、在爱荷华图书馆工作、土耳其的<a href="https://sobooks.cc/books/tag/%e7%be%8e%e5%9b%bd" title="查看更多关于美国的文章" target="_blank">美国</a>「和平工作团」担任英文老师。</p><p>曾获《怀丁作家奖》、《华莱士•斯蒂格纳奖》。<a href="https://sobooks.cc/books/tag/%e5%b0%8f%e8%af%b4" title="查看更多关于小说的文章" target="_blank">小说</a>《素歌》（Plainsong）入围《<a href="https://sobooks.cc/books/tag/%e7%be%8e%e5%9b%bd" title="查看更多关于美国的文章" target="_blank">美国</a>国家书卷奖》决选名单，该书也是奥巴马2009年度假时5本书单之一。</p><p>”</p><p>“他在人生的最后时刻，完成了这本关于爱和悲伤的<a href="https://sobooks.cc/books/tag/%e5%b0%8f%e8%af%b4" title="查看更多关于小说的文章" target="_blank">小说</a></p><p>（这本<a href="https://sobooks.cc/books/tag/%e5%b0%8f%e8%af%b4" title="查看更多关于小说的文章" target="_blank">小说</a>由哈鲁夫的遗孀帮他完成编辑）</p><p>生活往往比我们看上去更加复杂，即便它看上去平静如水</p><p>给在世间蓬勃生长，坦率去爱、温柔抵抗的人</p><p>★我70岁，活着，并且爱上一个人。</p><p>★纽约时报<a href="https://sobooks.cc/books/tag/%e5%b0%8f%e8%af%b4" title="查看更多关于小说的文章" target="_blank">小说</a>排行榜第1名</p><p>★亚马逊网络书店2015年6月最佳好书</p><p>★畅销巴西、法国、丹麦、英国、荷兰、挪威、德国、西班牙等国</p><div class="e-secret"><img src="/wp-content/themes/Git/assets/img/gzh.jpg" style="float:right;" width="140" height="140"><label style="font-size:16px; color:#F00; line-height:22px;">防和谐，网盘地址已被隐藏，输入“暗号”即可查看！<span style="font-size:12px;">(建议使用Chrome内核浏览器)</span></label><form action="https://sobooks.cc/books/16325.html" method="post"><input type="text" name="e_secret_key" class="euc-y-i" maxlength="50"><input type="submit" class="euc-y-s" value="提交查看"></form><div class="euc-clear"></div><label style="margin-top:10px; font-size:14px; line-height:24px;">※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ ※ <br>微信扫一扫右侧二维码，关注后回复 “<font color="red">暗号</font>”，即可获取！<font color="red">【暗号不定期更换】</font></label></div><hr><div class="open-message">SoBooks所有电子书均来自网络！如涉及版权问题，请及时联系o(^▽^)o！<br>本文链接：<a href="https://sobooks.cc/books/16325.html" target="_blank" title="晚风如诉">晚风如诉</a></div> <img src="https://sobooks.cc/wp-content/themes/Git/assets/img/zwjz.jpg"> <div class="article-social"> <div class="reward"> <div class="reward-button" style="cursor:pointer;">赏 <span class="reward-code"> <span class="alipay-code"> <img class="wechat-img wdp-appear" src="https://sobooks.cc/wp-content/themes/Git/assets/img/wx.jpg"><b>微信打赏</b> </span> <span class="wechat-code"> <img class="alipay-img wdp-appear" src="https://sobooks.cc/wp-content/themes/Git/assets/img/zfb.jpg"><b>支付宝打赏</b> </span> </span> </div><p class="reward-notice">如果本站的资源对您有些帮助，欢迎点击上方按钮打赏！</p> <p style="font-size: 16px; color: #f18c8c; font-weight: bold;">“ 感谢您对 SoBooks 的支持！”</p> </div><div class="social-share" data-mode="prepend" data-disabled="tencent,diandian"></div> <script src="https://apps.bdimg.com/libs/jquery/1.8.2/jquery.js"></script> <script src="https://sobooks.cc/wp-content/themes/Git/assets/js/jquery.share.min.js"></script></div> </article>', 'depth': 2, 'download_timeout': 180.0, 'download_slot': 'sobooks.cc', 'download_latency': 0.9769539833068848, 'chentong_url': 'https://sobooks.cc/go.html?url=https://306t.com/dir/14804066-39314511-5c546f', 'lanzou_url': 'https://sobooks.cc/go.html?url=https://sobooks.lanzous.com/b03mt4baf', 'baidu_url': 'https://sobooks.cc/go.html?url=https://pan.baidu.com/s/1TEgXuwC6KjkXO-3w5NYG4Q', 'baidu_code': 'f3k7'}
+2020-06-05 16:05:36 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
+2020-06-05 16:05:36 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
+2020-06-05 16:05:36 [scrapy.crawler] INFO: Overridden settings:
 {'BOT_NAME': 'sobooks',
  'CONCURRENT_REQUESTS': 1,
  'LOG_FILE': 'test.log',
@@ -208,12 +56,12 @@
  'SPIDER_MODULES': ['sobooks.spiders'],
  'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
                '(KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
-2020-06-04 18:39:49 [scrapy.extensions.telnet] INFO: Telnet Password: 3fca13627f4c1890
-2020-06-04 18:39:49 [scrapy.middleware] INFO: Enabled extensions:
+2020-06-05 16:05:36 [scrapy.extensions.telnet] INFO: Telnet Password: 7d787c607fe46906
+2020-06-05 16:05:36 [scrapy.middleware] INFO: Enabled extensions:
 ['scrapy.extensions.corestats.CoreStats',
  'scrapy.extensions.telnet.TelnetConsole',
  'scrapy.extensions.logstats.LogStats']
-2020-06-04 18:39:49 [scrapy.middleware] INFO: Enabled downloader middlewares:
+2020-06-05 16:05:36 [scrapy.middleware] INFO: Enabled downloader middlewares:
 ['scrapy.downloadermiddlewares.httpauth.HttpAuthMiddleware',
  'scrapy.downloadermiddlewares.downloadtimeout.DownloadTimeoutMiddleware',
  'scrapy.downloadermiddlewares.defaultheaders.DefaultHeadersMiddleware',
@@ -226,51 +74,20 @@
  'scrapy.downloadermiddlewares.cookies.CookiesMiddleware',
  'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware',
  'scrapy.downloadermiddlewares.stats.DownloaderStats']
-2020-06-04 18:39:49 [scrapy.middleware] INFO: Enabled spider middlewares:
+2020-06-05 16:05:36 [scrapy.middleware] INFO: Enabled spider middlewares:
 ['scrapy.spidermiddlewares.httperror.HttpErrorMiddleware',
  'scrapy.spidermiddlewares.offsite.OffsiteMiddleware',
  'scrapy.spidermiddlewares.referer.RefererMiddleware',
  'scrapy.spidermiddlewares.urllength.UrlLengthMiddleware',
  'scrapy.spidermiddlewares.depth.DepthMiddleware']
-2020-06-04 18:39:49 [scrapy.middleware] INFO: Enabled item pipelines:
+2020-06-05 16:05:36 [scrapy.middleware] INFO: Enabled item pipelines:
 ['sobooks.pipelines.MysqlPipline']
-2020-06-04 18:39:49 [scrapy.core.engine] INFO: Spider opened
-2020-06-04 18:39:49 [sobook] INFO: sobook connect mysql:{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'db': 'sobooks', 'passwd': ''}
-2020-06-04 18:39:49 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
-2020-06-04 18:39:49 [sobook] INFO: Spider opened: sobook
-2020-06-04 18:39:49 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
-2020-06-04 18:40:49 [scrapy.spidermiddlewares.httperror] INFO: Ignoring response <403 https://sobooks.cc/>: HTTP status code is not handled or not allowed
-2020-06-04 18:40:49 [scrapy.extensions.logstats] INFO: Crawled 1 pages (at 1 pages/min), scraped 0 items (at 0 items/min)
-2020-06-04 18:40:49 [scrapy.core.engine] INFO: Closing spider (finished)
-2020-06-04 18:40:49 [scrapy.statscollectors] INFO: Dumping Scrapy stats:
-{'downloader/request_bytes': 372,
- 'downloader/request_count': 1,
- 'downloader/request_method_count/GET': 1,
- 'downloader/response_bytes': 5187,
- 'downloader/response_count': 1,
- 'downloader/response_status_count/403': 1,
- 'elapsed_time_seconds': 60.349728,
- 'finish_reason': 'finished',
- 'finish_time': datetime.datetime(2020, 6, 4, 10, 40, 49, 811543),
- 'httperror/response_ignored_count': 1,
- 'httperror/response_ignored_status_count/403': 1,
- 'log_count/INFO': 14,
- 'response_received_count': 1,
- 'scheduler/dequeued': 1,
- 'scheduler/dequeued/memory': 1,
- 'scheduler/enqueued': 1,
- 'scheduler/enqueued/memory': 1,
- 'start_time': datetime.datetime(2020, 6, 4, 10, 39, 49, 461815)}
-2020-06-04 18:40:49 [scrapy.core.engine] INFO: Spider closed (finished)
-2020-06-04 18:41:36 [scrapy.utils.log] INFO: Scrapy 2.0.1 started (bot: sobooks)
-2020-06-04 18:41:36 [scrapy.utils.log] INFO: Versions: lxml 4.5.0.0, libxml2 2.9.9, cssselect 1.1.0, parsel 1.5.2, w3lib 1.21.0, Twisted 20.3.0, Python 3.7.6 (default, Jan  8 2020, 20:23:39) [MSC v.1916 64 bit (AMD64)], pyOpenSSL 19.1.0 (OpenSSL 1.1.1d  10 Sep 2019), cryptography 2.8, Platform Windows-10-10.0.17763-SP0
-2020-06-04 18:41:36 [scrapy.crawler] INFO: Overridden settings:
-{'BOT_NAME': 'sobooks',
- 'CONCURRENT_REQUESTS': 1,
- 'LOG_FILE': 'test.log',
- 'LOG_LEVEL': 'INFO',
- 'NEWSPIDER_MODULE': 'sobooks.spiders',
- 'RETRY_HTTP_CODES': [500, 502, 503, 504, 522, 524, 408, 520],
- 'SPIDER_MODULES': ['sobooks.spiders'],
- 'USER_AGENT': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
-               '(KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
+2020-06-05 16:05:36 [scrapy.core.engine] INFO: Spider opened
+2020-06-05 16:05:36 [sobook] INFO: sobook connect mysql:{'host': '127.0.0.1', 'port': 3306, 'user': 'root', 'db': 'sobooks', 'passwd': ''}
+2020-06-05 16:05:43 [sobook] INFO: get all_book_types:{'小说': 1, '文学': 2, '历史': 3, '日本': 4, '管理': 5, '科普': 6, '推理': 7, '社会': 8, '传记': 9, '经济': 10, '悬疑': 11, '美国': 12, '哲学': 13, '心理': 14, '金融': 15, '商业': 16, '随笔': 17, '经典': 18, '思维': 19, '投资': 20, '文化': 21, '科幻': 22, '励志': 23, '成长': 24, '英国': 25, '中国': 26, '政治': 27, '纪实': 28, '艺术': 29, '生活': 30, '职场': 31, '科学': 32, '互联网': 33, '漫画': 34, '散文': 35, '法国': 36, '股票': 37, '奇幻': 38, '营销': 39, '二战': 40, '战争': 41, '德国': 42, '创业': 43, '女性': 44, '军事': 45, '名著': 46, '学习': 47, '爱情': 48, '人物': 49, '世界': 50, '绘本': 51, '理财': 52, '教育': 53, '国学': 54}
+2020-06-05 16:05:43 [sobook] INFO: get alltags:{'小说文学': 1, '历史传记': 2, '人文社科': 3, '励志成功': 4, '经济管理': 5, '学习教育': 6, '生活时尚': 7, '英文原版': 8}
+2020-06-05 16:05:43 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-06-05 16:05:43 [sobook] INFO: Spider opened: sobook
+2020-06-05 16:05:43 [scrapy.extensions.telnet] INFO: Telnet console listening on 127.0.0.1:6023
+2020-06-05 16:06:43 [scrapy.extensions.logstats] INFO: Crawled 0 pages (at 0 pages/min), scraped 0 items (at 0 items/min)
+2020-06-05 16:07:07 [scrapy.downloadermiddlewares.retry] ERROR: Gave up retrying <GET https://sobooks.cc/xiaoshuowenxue> (failed 4 times): TCP connection timed out: 10060: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。.

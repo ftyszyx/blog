@@ -17,12 +17,20 @@ class authorspider(scrapy.Spider):
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
             'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
-            "cookie": "__cfduid=decf3f7387e8f965b3b3374b97c3597e81591265730; cf_clearance=1f4a1946bdc288263bc9d4d5aa5b7737792f5690-1591265783-0-250; UM_distinctid=1727ed4f41233-0e5192d707c6b1-f7d1d38-2a3000-1727ed4f413395; CNZZDATA1259444303=212689518-1591264504-https%253A%252F%252Fsobooks.cc%252F%7C1591264504; __gads=ID=ac9c45f7f76d4c0c:T=1591265784:S=ALNI_MblTn46PW05HdaEw7TOYp9aSjd2Bg"
         }
     }
     def start_requests(self):
-        url='https://sobooks.cc/'
-        yield scrapy.Request(url=url, callback=self.parse,meta={"max_retry_times":3},errback=self.errback_httpbin)
+        url='https://sobooks.cc/xiaoshuowenxue'
+        #url = 'https://sobooks.cc/lishizhuanji'
+        #url = 'https://sobooks.cc/renwensheke'
+        #url = 'https://sobooks.cc/jingjiguanli'
+        #url = 'https://sobooks.cc/xuexijiaoyu'
+        #url = 'https://sobooks.cc/shenghuoshishang'
+        #url = 'https://news.ycombinator.com/'
+        cookie={'cookie':'__cfduid=decf3f7387e8f965b3b3374b97c3597e81591265730; UM_distinctid=1727ed4f41233-0e5192d707c6b1-f7d1d38-2a3000-1727ed4f413395; __gads=ID=ac9c45f7f76d4c0c:T=1591265784:S=ALNI_MblTn46PW05HdaEw7TOYp9aSjd2Bg; cf_clearance=e6f01f37b3db605188f632dc65926f5fa63515cb-1591326191-0-250; CNZZDATA1259444303=212689518-1591264504-https%253A%252F%252Fsobooks.cc%252F%7C1591325024'}
+
+        yield scrapy.Request(url=url, callback=self.parse_type,meta={"max_retry_times":3,"booktype":"小说文学"},errback=self.errback_httpbin,cookies=cookie)
+        #yield scrapy.Request(url=url, callback=self.parse_type, meta={"max_retry_times": 3},errback=self.errback_httpbin, cookies=cookie)
 
 
     def parse(self, response):
@@ -39,7 +47,7 @@ class authorspider(scrapy.Spider):
 
         next_page = pageinfo.css('li.next-page a::attr(href)').get()
         if next_page is not None:
-            yield response.follow(next_page, callback=self.parse_page, meta={"booktype": booktype})
+            yield response.follow(next_page, callback=self.parse_type, meta={"booktype": booktype})
 
     def parse_page(self,response):
         booitem = BooksItem()
@@ -98,12 +106,29 @@ class authorspider(scrapy.Spider):
                 booitem["baidu_code"] =response.css('div.e-secret b::text').get().strip()
             yield booitem
             return
+        else:
+            box=response.css('div.e-secret b')
+            alla=box.css('a')
+            alltext=box.css('::text')
+            trueindex=0
+            for index,texttag in enumerate(alltext):
+                title=texttag.get().strip()
+                linkurl=""
+                if trueindex<len(alla):
+                    linkurl = alla[trueindex].css('::attr(href)').get().strip()
+                if title.startswith("百度"):
+                    booitem["baidu_url"] = linkurl
+                    trueindex+=1
+                elif title.startswith("城通"):
+                    booitem["chentong_url"] = linkurl
+                    trueindex += 1
+                elif title.startswith("蓝奏"):
+                    booitem["lanzou_url"] = linkurl
+                    trueindex += 1
+                elif title.startswith("提取码"):
+                    booitem["baidu_code"] = title.split('：')[1].strip()
 
-        box=response.css('div.e-secret b')
-        alla=box.css('a')
-        alltext=box.css('::text')
-
-        yield booitem
+            yield booitem
 
 
     #错误处理
