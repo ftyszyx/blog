@@ -67,30 +67,42 @@ class MysqlPipline(object):
             self.connect.commit()
 
 
+    def geturl(self,url):
+        if url.startswith("https://sobooks.cc/go.html?url="):
+            return url.replace("https://sobooks.cc/go.html?url=","").strip()
+        return url
 
     def addOneBook(self,item):
-        baiduurl = item.get('baidu_url', '')
+        baiduurl = self.geturl(item.get('baidu_url', ''))
         baidu_code = item.get('baidu_code', '')
         isbn = item.get('isbn', '')
-        lanzou_url = item.get('lanzou_url', '')
-        chentong_url = item.get('chentong_url', '')
+        lanzou_url = self.geturl(item.get('lanzou_url', ''))
+        chentong_url = self.geturl(item.get('chentong_url', ''))
         tagstr = self.getbooktag(item["tag"])
         typestr = self.get_book_types(item["type"])
         imgstr=item.get("img","")
         desc = item.get('desc', '')
+        title=item.get('title','')
+        author = item.get('author', '')
         try:
             with self.connect.cursor() as cursor:
-                cursor.execute(
-                    """insert into {} (title, desc, author, type, img, baidu_url, baidu_code,isbn,tags,lanzou_url,chentong_url)
-                    value (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""".format(TABLE_BOOK),
-                    (item['title'], desc, item['author'], typestr, imgstr, baiduurl, baidu_code, isbn, tagstr,
-                     lanzou_url, chentong_url))
+                cursor.execute("""select * from {} where `title`=%s and `author`=%s """.format(TABLE_BOOK), (title,author))
+                # 提交sql语句
+                results = cursor.fetchone()
+                if results is None:
+                    cursor.execute(
+                        """insert into {} (title, intro_text, author, type, img, baidu_url, baidu_code,isbn,tags,lanzou_url,chentong_url)
+                        value (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""".format(TABLE_BOOK),
+                        (title, desc,author, typestr, imgstr, baiduurl, baidu_code, isbn, tagstr,
+                         lanzou_url, chentong_url))
+                else:
+                    print('book exit')
                 # 提交sql语句
                 self.connect.commit()
                 #scrapy.Item.get()
         except Exception as e:
+            print("nysqlerr:",cursor._last_executed)
             raise scrapy.exceptions.CloseSpider(reason='sqlerr')
-            return false
 
     #获取tag
     def getbooktag(self,tags):
@@ -107,9 +119,9 @@ class MysqlPipline(object):
                     cursor.execute("""select * from {} where `name`=%s""".format(TABLE_TAG), (tagname))
                     # 提交sql语句
                     results = cursor.fetchone()
-                    tagid=results["id"]
+                    tagid=results[0]
                     tagids.append(tagid)
-                    self.all_book_tags[tagid] =tagname
+                    self.all_book_tags[tagname] =tagid
                     self.connect.commit()
         return ",".join([str(a) for a in tagids])
 

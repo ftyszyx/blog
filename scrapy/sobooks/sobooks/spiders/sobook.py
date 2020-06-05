@@ -41,33 +41,42 @@ class authorspider(scrapy.Spider):
 
     def parse_type(self,response):
         booktype = response.meta.get('booktype')
-        for booka in response.css('div.card-item a'):
-            yield response.follow(booka, callback=self.parse_page, meta={"booktype": booktype})
+        for booka in response.css('div.card-item div a'):
+            pageurl=booka.css('::attr(href)').get()
+            if pageurl is not None:
+                self.logger.info("get item:%s",pageurl)
+                yield response.follow(pageurl, callback=self.parse_page, meta={"booktype": booktype})
         pageinfo=response.css('div.pagination ul')
 
         next_page = pageinfo.css('li.next-page a::attr(href)').get()
         if next_page is not None:
+            self.logger.info("get nextpage:%s", next_page)
             yield response.follow(next_page, callback=self.parse_type, meta={"booktype": booktype})
 
     def parse_page(self,response):
         booitem = BooksItem()
         booktype = response.meta.get('booktype')
         bookinfo=response.css('div.book-info')
-        booitem["img"] = bookinfo.css('div.bookpic img::attr(src)').get().strip()
+
+        booitem["img"] = bookinfo.css('div.bookpic img::attr(src)').get()
+        if booitem["img"]==None:
+            self.logger.error("img not find")
+
         allli=bookinfo.css('li')
         tagArr = []
         for li in allli:
             title=li.css('strong::text').get().strip(':：')
+            textarr=li.css('::text')
             if title=="标签":
                 for tag in li.css('a'):
                     tagArr.append(tag.css('::text').get().strip())
                 booitem["tag"] = ",".join(tagArr)
             elif title=="作者":
-                booitem["author"] = li.css('::text').get().strip()
+                booitem["author"] = textarr[1].get().strip()
             elif title=="书名":
-                booitem["title"] = li.css('::text').get().strip()
+                booitem["title"] = textarr[1].get().strip()
             elif title=="ISBN":
-                booitem["isbn"] = li.css('::text').get().strip()
+                booitem["isbn"] = textarr[1].get().strip()
 
         booitem["type"] = booktype
         booitem["desc"]=response.css('article.article-content').extract()[0]
@@ -76,6 +85,7 @@ class authorspider(scrapy.Spider):
         if len(formtag)>0:
             formurl=formtag.css('::attr(action)').get().strip()
             formdata = 'e_secret_key=666'
+            self.logger.info("post to:%s", formurl)
             yield scrapy.Request(
                 formurl,
                 body=formdata,
@@ -103,7 +113,7 @@ class authorspider(scrapy.Spider):
                 elif title.startswith("蓝奏"):
                     booitem["lanzou_url"] = linkurl
             if  booitem["baidu_url"] is not None:
-                booitem["baidu_code"] =response.css('div.e-secret b::text').get().strip()
+                booitem["baidu_code"] =response.css('div.e-secret b::text').get().split('：')[1].strip()
             yield booitem
             return
         else:
