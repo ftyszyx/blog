@@ -99,6 +99,7 @@ class MysqlPipline(object):
                     print('book exit')
                 # 提交sql语句
                 self.connect.commit()
+
                 #scrapy.Item.get()
         except Exception as e:
             print("nysqlerr:",cursor._last_executed)
@@ -131,8 +132,9 @@ class MysqlPipline(object):
         raise scrapy.exceptions.CloseSpider(reason='book_type {} not exit'.format(book_type))
 
     def process_item(self, item, spider):
-        spider.logger.info("%s process_item:%s", spider.name,item)
+
         if(spider.name=="sobook"):
+            spider.logger.info("%s save book item:%s", spider.name, item.get('title', ''))
             self.addOneBook(item)
         elif(spider.name=="sotag"):
             tagname=item['name']
