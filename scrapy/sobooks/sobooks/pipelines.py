@@ -41,7 +41,7 @@ class MysqlPipline(object):
                 for row in results:
                     self.all_book_tags[row[1]]=row[0]
                 self.connect.commit()
-                spider.logger.info("get all_book_types:%s",self.all_book_tags)
+                spider.logger.info("get all_book_tags:%s",self.all_book_tags)
 
             with self.connect.cursor() as cursor:
                 cursor.execute(""" select * from {} """.format(TABLE_TYPE))
@@ -49,7 +49,7 @@ class MysqlPipline(object):
                 for row in results:
                     self.all_book_types[row[1]]=row[0]
                 self.connect.commit()
-                spider.logger.info("get alltags:%s", self.all_book_types)
+                spider.logger.info("get all_book_types:%s", self.all_book_types)
 
 
     def addOneType(self,item):
