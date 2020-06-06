@@ -8,7 +8,9 @@ TABLE_TAG="book_tags"
 TABLE_TYPE="book_types"
 TABLE_BOOK="books"
 import logging
-logging.basicConfig(level=logging.INFO,filename="baidu.log",format='%(asctime)s - %(levelname)s - %(message)s')
+logfile = open("baidu.log", encoding="utf-8", mode="a")#防止中文乱码
+logging.basicConfig(level=logging.INFO,stream=logfile,format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 def startSave():
 
@@ -46,7 +48,7 @@ def startSave():
 			cursor.execute(""" select COUNT(*) from {} where saveok=0""".format(TABLE_BOOK))
 			results = cursor.fetchone()
 			num=int(results["COUNT(*)"])
-			perpagenum=1000
+			perpagenum=10
 			page=int(num/perpagenum+1)
 
 			for pageindex in range(1,page):
@@ -58,15 +60,13 @@ def startSave():
 					baiducode = item["baidu_code"]
 					typename=all_book_types[item["type"]]
 					bookname=item["title"]
-					try:
-						result = bai_du_pan.saveShare(baiduurl, baiducode, '/book/sobook/%s' % typename)
-					except Exception as e:
-						result = {'errno': -1}
-						logging.error('其他保存异常 bookname:%s typename:%s error:%s',bookname,typename,e)
+					result = bai_du_pan.saveShare(baiduurl, baiducode, '/sobooks/'+typename)
 					if (result['errno'] == 0):
 						logging.info('保存成功:typename:%s bookname:%s', typename,bookname)
-						cursor.execute(""" update * set saveok=1 where id=%s """.format(TABLE_TYPE),item["id"])
+						cursor.execute(""" update {} set `saveok`=1 where `id`=%s """.format(TABLE_BOOK),item["id"])
 						connect.commit()
+					else:
+						logging.error('保存失败:typename:%s bookname:%s url:%s code:%s err:%s', typename, bookname,baiduurl,baiducode,result)
 
 	except Exception as e:
 		if cursor is not None and hasattr(cursor,"_last_executed"):
