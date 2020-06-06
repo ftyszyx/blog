@@ -71,7 +71,7 @@ def startSave():
 	except Exception as e:
 		if cursor is not None and hasattr(cursor,"_last_executed"):
 			logging.error("nysqlerr:%s", cursor._last_executed)
-		logging.error("error:%s",e)
+		logging.error("error:%s\n stack:%s",e,repr(e))
 	logging.info('全部执行完成！')
 
 
