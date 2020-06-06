@@ -1,29 +1,78 @@
 # coding="utf-8"
 
-import sys
-sys.path.append('/home/meetup/Desktop/BaiDuPan')
-from BaiDuPan import BaiDuPan
-from DbOperate import DbOperate
+from baidu import BaiDuPan
 import time
+import pymysql.cursors
+
+TABLE_TAG="book_tags"
+TABLE_TYPE="book_types"
+TABLE_BOOK="books"
+import logging
+logging.basicConfig(level=logging.INFO,filename="baidu.log",format='%(asctime)s - %(levelname)s - %(message)s')
 
 def startSave():
-	db_operate = DbOperate()
-	unsave_list = db_operate.getUnSave()
-	bai_du_pan = BaiDuPan()
-	print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), '开始执行保存至百度网盘')
-	for hifini in unsave_list:
-		try:
-			result = bai_du_pan.saveShare(hifini.pan_url, hifini.pan_pwd, '/hifini.com/%s' % hifini.type)
-		except Exception as e:
-			result = {'errno': -1}
-			print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), '其他保存异常（ID：', hifini.id, '）: ', e)
-		if(result['errno'] == 0):
-			db_operate.update(hifini.id, 1, 1)
-			if(result['errno'] > 0):
-				print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), '百度网盘分享链接有问题（ID：', id, '）: ', e)
-		else:
-			db_operate.update(hifini.id, 0, 0)
-	print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), '全部执行完成！')
+
+	all_book_tags = {}
+	all_book_types = {}
+	try:
+		connect = pymysql.connect(
+			host='127.0.0.1',  # 数据库地址
+			port=3306,  # 数据库端口
+			db='sobooks',  # 数据库名
+			user='root',  # 数据库用户名
+			passwd='',  # 数据库密码
+			charset='utf8',  # 编码方式
+			use_unicode=True)
+
+		with connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
+			#初始化百度网盘
+			bai_du_pan = BaiDuPan()
+			result = bai_du_pan.verifyCookie()
+
+			if (result['errno'] != 0):
+				logging.error("baidu link error:%s", result)
+				return
+
+			cursor.execute(""" select * from {} """.format(TABLE_TAG))
+			results = cursor.fetchall()
+			for row in results:
+				all_book_tags[row["id"]] = row["name"]
+
+			cursor.execute(""" select * from {} """.format(TABLE_TYPE))
+			results = cursor.fetchall()
+			for row in results:
+				all_book_types[row["id"]] = row["name"]
+
+			cursor.execute(""" select COUNT(*) from {} where saveok=0""".format(TABLE_BOOK))
+			results = cursor.fetchone()
+			num=int(results["COUNT(*)"])
+			perpagenum=1000
+			page=int(num/perpagenum+1)
+
+			for pageindex in range(1,page):
+				start=(pageindex-1)*perpagenum;
+				cursor.execute(""" select * from {} where saveok=0 limit {},{} """.format(TABLE_BOOK,start,perpagenum))
+				results = cursor.fetchall()
+				for item in results:
+					baiduurl=item["baidu_url"]
+					baiducode = item["baidu_code"]
+					typename=all_book_types[item["type"]]
+					bookname=item["title"]
+					try:
+						result = bai_du_pan.saveShare(baiduurl, baiducode, '/book/sobook/%s' % typename)
+					except Exception as e:
+						result = {'errno': -1}
+						logging.error('其他保存异常 bookname:%s typename:%s error:%s',bookname,typename,e)
+					if (result['errno'] == 0):
+						logging.info('保存成功:typename:%s bookname:%s', typename,bookname)
+						cursor.execute(""" update * set saveok=1 where id=%s """.format(TABLE_TYPE),item["id"])
+						connect.commit()
+
+	except Exception as e:
+		if cursor is not None and hasattr(cursor,"_last_executed"):
+			logging.error("nysqlerr:%s", cursor._last_executed)
+		logging.error("error:%s",e)
+	logging.info('全部执行完成！')
 
 
 if __name__ == '__main__':

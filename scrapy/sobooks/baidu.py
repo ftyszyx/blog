@@ -1,6 +1,8 @@
 # coding="utf-8"
 
 import requests
+from requests_html import HTMLSession
+
 import re
 import json
 import time
@@ -27,12 +29,24 @@ from io import BytesIO
 class BaiDuPan(object):
     def __init__(self):
         # 创建session并设置初始登录Cookie
-        self.session = requests.session()
-        # self.session.cookies['BDUSS'] = ''
-        # self.session.cookies['STOKEN'] = ''
+
+        self.session = HTMLSession()
+        self.session.cookies['BDUSS'] = 'pSb3VsWW5zSm53ajlCdU9FU2RiYlVqMURYb2wwT2UySHRtN1V1bG5Da1pvd1ZkSVFBQUFBJCQAAAAAAAAAAAEAAABGhdQBZnR5c3p5eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkW3lwZFt5cM1'
+        self.session.cookies['STOKEN'] = '132f5312854e7e3f2493aca33390f2fa657d475beabb9a5e4ef5151b0ce79267'
+        self.session.cookies['PSTM'] = '1545035747'
+        self.session.cookies['BIDUPSID'] = '674215C7FF79BBCE5EBB9B739690812C'
+        self.session.cookies['SCRC'] = 'd05c10a7acc14a59a3a95ca589e8fade'
+        self.session.cookies['STOKEN'] = '132f5312854e7e3f2493aca33390f2fa657d475beabb9a5e4ef5151b0ce79267'
+        self.session.cookies['cflag'] = '13%3A3'
+        self.session.cookies['BDORZ'] = 'B490B5EBF6F3CD402E515D22BCDA1598'
+        self.session.cookies['cflag'] = '13%3A3'
+        self.session.cookies['Hm_lvt_7a3960b6f067eb0085b7f96ff5e660b0'] = '1591426722,1591426737,1591426757,1591426770'
+        self.session.cookies['BDCLND'] = '207%2B8hAC9MEPuJOera6b%2Feh4PP3B3RmG7dKEbmahXQg%3D'
+        self.session.cookies['Hm_lpvt_7a3960b6f067eb0085b7f96ff5e660b0'] = '1591428108'
+        self.session.cookies['PANPSC'] = '9377201415148911593%3A2AC%2B0bFe1jI0%2BoiANTN3M1cS2d9ns3O57chA6gSvfXejhXO5d8VhWeNHiOwr%2ByPWOg9ifdcaUVeHKzdI90RHx5FkepcFfbvIJlOfPZFHq36ck0T9AttkQbtbT0VT6%2BsulR186M70GuERH7IVbqa2GZcoIQ8tHxKCZmbjOX3SH%2B2b%2BUwvMTQuTK3c2RP5BD5IQj98uf1UvHiSsVZaqyA8TA%3D%3D'
         self.headers = {
             'Host': 'pan.baidu.com',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
         }
 
     '''
@@ -45,11 +59,11 @@ class BaiDuPan(object):
         if (self.session.cookies['BDUSS'] == '' or self.session.cookies['STOKEN'] == ''):
             return {'errno': 1, 'err_msg': '请在init方法中配置百度网盘登录Cookie'}
         else:
-            response = self.session.get('https://pan.baidu.com/', headers=self.headers)
-            home_page = response.content.decode("utf-8")
-            if ('<title>百度网盘-全部文件</title>' in home_page):
-                user_name = re.findall(r'initPrefetch\((.+?)\'\)', home_page)[0]
-                user_name = re.findall(r'\, \'(.+?)\'\)', home_page)[0]
+            response = self.session.get('https://pan.baidu.com/disk/home?', headers=self.headers)
+            html=response.content.decode("utf-8")
+            username_re=re.findall(r'username\":\"([^\"]+)\"', html)
+            user_name = username_re[0]
+            if user_name is not None:
                 return {'errno': 0, 'err_msg': '有效的Cookie，用户名：%s' % user_name}
             else:
                 return {'errno': 2, 'err_msg': '无效的Cookie！'}

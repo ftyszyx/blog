@@ -26,7 +26,6 @@ class authorspider(scrapy.Spider):
         url='https://sobooks.cc/lizhichenggong'
         #url = 'https://sobooks.cc/jingjiguanli'
         #url = 'https://sobooks.cc/xuexijiaoyu'
-
         #url = 'https://sobooks.cc/shenghuoshishang'
         #url = 'https://sobooks.cc/yingwenyuanban'
         #url = 'https://news.ycombinator.com/'
