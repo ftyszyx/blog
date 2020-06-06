@@ -99,6 +99,8 @@ class BaiDuPan(object):
 
         # 提取码校验的请求中有此参数
         bdstoken = re.findall(r'bdstoken\":\"(.+?)\"', share_page)
+        if bdstoken is None or len(bdstoken)==0:
+            return {"errno": 6, "err": "未知原因"}
         bdstoken = bdstoken[0]
         # 如果加密分享，需要验证提取码，带上验证通过的Cookie再请求分享链接，即可获取分享文件
         if ('init' in share_res.url):
