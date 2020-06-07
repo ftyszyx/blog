@@ -92,10 +92,9 @@ class MysqlPipline(object):
                 results = cursor.fetchone()
                 if results is None:
                     cursor.execute(
-                        """insert into {} (title, intro_text, author, type, img, baidu_url, baidu_code,isbn,tags,lanzou_url,chentong_url)
+                        """insert into {} (title, intro_text, author, type, img, baidu_url, baidu_code,isbn,tags,lanzou_url,chentong_url,src_url)
                         value (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""".format(TABLE_BOOK),
-                        (title, desc,author, typestr, imgstr, baiduurl, baidu_code, isbn, tagstr,
-                         lanzou_url, chentong_url))
+                        (title, desc,author, typestr, imgstr, baiduurl, baidu_code, isbn, tagstr,lanzou_url, chentong_url,src))
                     spider.logger.info("%s save book item:%s", spider.name, item.get('title', ''))
                 else:
 

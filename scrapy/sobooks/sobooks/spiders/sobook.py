@@ -29,7 +29,16 @@ class authorspider(scrapy.Spider):
               'https://sobooks.cc/shenghuoshishang',
               'https://sobooks.cc/yingwenyuanban',
         ]
-        cookie={'cookie':'__cfduid=decf3f7387e8f965b3b3374b97c3597e81591265730; UM_distinctid=1727ed4f41233-0e5192d707c6b1-f7d1d38-2a3000-1727ed4f413395; __gads=ID=ac9c45f7f76d4c0c:T=1591265784:S=ALNI_MblTn46PW05HdaEw7TOYp9aSjd2Bg; cf_clearance=e6f01f37b3db605188f632dc65926f5fa63515cb-1591326191-0-250; CNZZDATA1259444303=212689518-1591264504-https%253A%252F%252Fsobooks.cc%252F%7C1591325024'}
+        #cookie={'cookie':'__cfduid=decf3f7387e8f965b3b3374b97c3597e81591265730; UM_distinctid=1727ed4f41233-0e5192d707c6b1-f7d1d38-2a3000-1727ed4f413395; __gads=ID=ac9c45f7f76d4c0c:T=1591265784:S=ALNI_MblTn46PW05HdaEw7TOYp9aSjd2Bg; cf_clearance=e6f01f37b3db605188f632dc65926f5fa63515cb-1591326191-0-250; CNZZDATA1259444303=212689518-1591264504-https%253A%252F%252Fsobooks.cc%252F%7C1591325024'}
+        #cookie={'cookie':'__cfduid=d4247258b9b4f26cd1ad523106d6523291591275840;UM_distinctid=1727f6c79291-0ac3afb2b8e3c4-1333063-1fa400-1727f6c792a9a1;__gads=ID=dc9a625409077556:T=1591275841:S=ALNI_MbyldsOebciY-QMySFfsXwxuO70oQ;cf_clearance=5e9edfeeb5cc2bbdb75135eb0826a97858ed7a1e-1591507663-0-250;CNZZDATA1259444303=1995023598-1591274531-%7C1591507619'}
+        cookie={
+            '__cfduid': 'd4247258b9b4f26cd1ad523106d6523291591275840',
+            'UM_distinctid': '1727f6c79291-0ac3afb2b8e3c4-1333063-1fa400-1727f6c792a9a1',
+            'cf_clearance': '5e9edfeeb5cc2bbdb75135eb0826a97858ed7a1e-1591507663-0-250',
+            'CNZZDATA1259444303': '1995023598-1591274531-%7C1591507619',
+            '__gads': 'ID=dc9a625409077556:T=1591275841:S=ALNI_MbyldsOebciY-QMySFfsXwxuO70oQ'
+        }
+
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse_type,meta={"max_retry_times":3},errback=self.errback_httpbin,cookies=cookie)
         #yield scrapy.Request(url=url, callback=self.parse_type, meta={"max_retry_times": 3},errback=self.errback_httpbin, cookies=cookie)

@@ -1,16 +1,21 @@
 # coding="utf-8"
 
 from baidu import BaiDuPan
-import time
+from lanzou import Lanzou
 import pymysql.cursors
-
+import  os
 TABLE_TAG="book_tags"
 TABLE_TYPE="book_types"
 TABLE_BOOK="books"
 import logging
-logfile = open("baidu.log", encoding="utf-8", mode="a")#防止中文乱码
+logfile = open("save.log", encoding="utf-8", mode="a")#防止中文乱码
 logging.basicConfig(level=logging.INFO,stream=logfile,format='%(asctime)s - %(levelname)s - %(message)s')
 
+def testLanzou():
+	lanzou=Lanzou()
+
+	#lanzou.Download(os.path.join(os.curdir,"test"),"https://sobooks.lanzous.com/iHOaHdcmsyj")
+	print(lanzou.Download(os.path.join(os.curdir, "test"), "https://sobooks.lanzous.com/b03mtamna"))
 
 def startSave():
 
@@ -29,6 +34,7 @@ def startSave():
 		with connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
 			#初始化百度网盘
 			bai_du_pan = BaiDuPan()
+			lanzou = Lanzou()
 			result = bai_du_pan.verifyCookie()
 
 			if (result['errno'] != 0):
@@ -60,13 +66,24 @@ def startSave():
 					baiducode = item["baidu_code"]
 					typename=all_book_types[item["type"]]
 					bookname=item["title"]
+					chentongurl = item["chentong_url"]
+					lanzou_url = item["lanzou_url"]
+
+
 					result = bai_du_pan.saveShare(baiduurl, baiducode, '/sobooks/'+typename)
 					if (result['errno'] == 0):
 						logging.info('保存成功:typename:%s bookname:%s', typename,bookname)
 						cursor.execute(""" update {} set `saveok`=1 where `id`=%s """.format(TABLE_BOOK),item["id"])
 						connect.commit()
 					else:
-						logging.error('保存失败:typename:%s bookname:%s url:%s code:%s err:%s', typename, bookname,baiduurl,baiducode,result)
+						logging.error('百度保存失败:typename:%s bookname:%s url:%s code:%s err:%s', typename, bookname,baiduurl,baiducode,result)
+						if lanzou_url != "":
+							lanzou.Download(os.path.join(os.curdir, typename), lanzou_url)
+						elif chentongurl!="" and (".lanzous.com" in chentongurl):
+							lanzou.Download(os.path.join(os.curdir, typename), chentongurl)
+
+
+
 
 	except Exception as e:
 		if cursor is not None and hasattr(cursor,"_last_executed"):
@@ -76,4 +93,5 @@ def startSave():
 
 
 if __name__ == '__main__':
-	startSave()
+	testLanzou()
+	#startSave()
