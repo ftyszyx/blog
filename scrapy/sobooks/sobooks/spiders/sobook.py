@@ -20,18 +20,18 @@ class authorspider(scrapy.Spider):
         }
     }
     def start_requests(self):
-        #url='https://sobooks.cc/xiaoshuowenxue'
-        #url = 'https://sobooks.cc/lishizhuanji'
-        #url = 'https://sobooks.cc/renwensheke'
-        url='https://sobooks.cc/lizhichenggong'
-        #url = 'https://sobooks.cc/jingjiguanli'
-        #url = 'https://sobooks.cc/xuexijiaoyu'
-        #url = 'https://sobooks.cc/shenghuoshishang'
-        #url = 'https://sobooks.cc/yingwenyuanban'
-        #url = 'https://news.ycombinator.com/'
+        urls=['https://sobooks.cc/xiaoshuowenxue',
+              'https://sobooks.cc/lishizhuanji',
+              'https://sobooks.cc/renwensheke',
+              'https://sobooks.cc/lizhichenggong',
+              'https://sobooks.cc/jingjiguanli',
+              'https://sobooks.cc/xuexijiaoyu',
+              'https://sobooks.cc/shenghuoshishang',
+              'https://sobooks.cc/yingwenyuanban',
+        ]
         cookie={'cookie':'__cfduid=decf3f7387e8f965b3b3374b97c3597e81591265730; UM_distinctid=1727ed4f41233-0e5192d707c6b1-f7d1d38-2a3000-1727ed4f413395; __gads=ID=ac9c45f7f76d4c0c:T=1591265784:S=ALNI_MblTn46PW05HdaEw7TOYp9aSjd2Bg; cf_clearance=e6f01f37b3db605188f632dc65926f5fa63515cb-1591326191-0-250; CNZZDATA1259444303=212689518-1591264504-https%253A%252F%252Fsobooks.cc%252F%7C1591325024'}
-
-        yield scrapy.Request(url=url, callback=self.parse_type,meta={"max_retry_times":3,"booktype":"励志成功"},errback=self.errback_httpbin,cookies=cookie)
+        for url in urls:
+            yield scrapy.Request(url=url, callback=self.parse_type,meta={"max_retry_times":3},errback=self.errback_httpbin,cookies=cookie)
         #yield scrapy.Request(url=url, callback=self.parse_type, meta={"max_retry_times": 3},errback=self.errback_httpbin, cookies=cookie)
 
 
@@ -42,7 +42,7 @@ class authorspider(scrapy.Spider):
 
 
     def parse_type(self,response):
-        booktype = response.meta.get('booktype')
+        booktype=response.css('li.current-menu-item a::text').get()
         for booka in response.css('div.card-item div a'):
             pageurl=booka.css('::attr(href)').get()
             if pageurl is not None:
@@ -81,6 +81,7 @@ class authorspider(scrapy.Spider):
                 booitem["isbn"] = textarr[1].get().strip()
 
         booitem["type"] = booktype
+        booitem["src"] = response.url
         booitem["desc"]=response.css('article.article-content').extract()[0]
         #获取下载地址
         formtag=response.css('div.e-secret form')

@@ -2839,3 +2839,7 @@
 2020-06-06 23:43:00,336 - ERROR - 保存失败:typename:小说文学 bookname:战火家园 url:https://pan.baidu.com/s/11xWi3VuBBM3XSZzYBzkOiQ code:bu8g err:{'errno': 6, 'err': '未知原因'}
 2020-06-06 23:43:00,430 - ERROR - 保存失败:typename:小说文学 bookname:金蔷薇（译文经典） url:https://pan.baidu.com/s/1XEchFU4hUbumBY6IE8JbEA code:sxwx err:{'errno': 6, 'err': '未知原因'}
 2020-06-06 23:43:00,532 - ERROR - 保存失败:typename:小说文学 bookname:撒马尔罕 url:https://pan.baidu.com/s/1yTVCHsRmoFG2LQQ2PqDBLg code:nqut err:{'errno': 6, 'err': '未知原因'}
+2020-06-07 13:07:35,189 - ERROR - 保存失败:typename:小说文学 bookname:什么是什么 url:https://pan.baidu.com/s/1k72-c7GKueQ4q514xwN19g code:bx6c err:{'errno': 2, 'err': '分享文件已被删除'}
+2020-06-07 13:07:35,522 - ERROR - 保存失败:typename:小说文学 bookname:悠悠我心 url:https://pan.baidu.com/s/1O1AlZQA9LwYY9r_OY-Jimg code:qzt7 err:{'errno': 2, 'err': '分享文件已被删除'}
+2020-06-07 13:07:35,885 - ERROR - 保存失败:typename:小说文学 bookname:名侦探柯南（第11部：卷81~卷88） url:https://pan.baidu.com/s/1DFKcLq00O6hXa-JJNpFRqg code:hxqv err:{'errno': 2, 'err': '分享文件已被删除'}
+2020-06-07 13:07:36,426 - ERROR - 保存失败:typename:小说文学 bookname:走：Green和张早故事集 url:https://pan.baidu.com/s/1VdADuwNCh-0VvscYxLTHUw code:1ft4 err:{'errno': 2, 'err': '分享文件已被删除'}
