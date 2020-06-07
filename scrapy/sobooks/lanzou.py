@@ -12,9 +12,24 @@ def is_number(str):
     except ValueError:
         return False
 
-def getJsValue(html,key):
-    regex= re.compile(r"\n[^\/]*%s[\s]*=[\s]*(\'*[^;\']*\'*);" % key)
-    find_res = re.search(regex, html)
+def clearComment(text):
+    find_res = re.findall(r'//[^\n]*', text)
+    if len(find_res) > 0:
+        for item in find_res:
+            text = text.replace(item, "//")
+    return text
+
+def getPostJson(text):
+    find_res = re.search(r'data \:[^{}]*(\{[^}]*\})', text)
+    postdata_str = find_res.group(1)
+    postdata = getDictFromJson(text, postdata_str)
+    return postdata
+
+def getJsValue(text,key):
+    regex= re.compile(r"%s[\s]*=[\s]*(\'*[^;\'\}]*\'*);" % key)
+    find_res = re.search(regex, text)
+    if find_res is None:
+        print("key not find:",key,text)
     valuetext=find_res.group(1)
     if valuetext.startswith("'")==False:
         return int(valuetext)
@@ -23,7 +38,7 @@ def getJsValue(html,key):
 
 def getDictFromJson(html,json):
     data={}
-    find_res = re.findall(r'\'([^,\']*)\':(\'*[^\']*\'*),', json)
+    find_res = re.findall(r'\'([^,\'\}]*)\':(\'*[^\',\}]*\'*)', json)
     for item in find_res:
         key_str=item[0]
         value_str=item[1]
@@ -51,16 +66,12 @@ class Lanzou(object):
         framurl = host + ifram.attrs["src"]
         frameres = self.session.get(framurl, headers=self.headers)
         frameres_page = frameres.content.decode("utf-8")
-        #print(frameres_page)
-        cots=getJsValue(frameres_page,"cots")
-        print("get cots",cots)
-        postdata = {
-            'action': 'downprocess',
-            'sign': cots,
-            'ves': 1
-        }
+        frameres_page=clearComment(frameres_page)
+        #print("frameres_page",frameres_page)
+        postdata = getPostJson(frameres_page)
+        print("postdata", postdata)
         res = self.session.post(host + "ajaxm.php", headers=self.headers, data=postdata)
-        #print("get json", res)
+        print("get json", res)
         res_json = res.json()
         print("get json:",res_json)
         download_url = res_json["dom"] + "/file/" + res_json["url"]
@@ -83,11 +94,8 @@ class Lanzou(object):
             self.Download2(os.path.join(path, filename),host,ifram)
         else:
             res_html = res.content.decode("utf-8")
-            find_res=re.search(r'data \:[^{}]*(\{[^}]*\})',res_html)
-            postdata_str=find_res.group(1)
-            postdata=getDictFromJson(res_html,postdata_str)
-            #print("get postdata", eval(postdata_str)) 处理不了字符串不带引号的情况
-            #postdata = json.loads(postdata_str)  处理不掉单引号的情况
+            res_html=clearComment(res_html)
+            postdata=getPostJson(res_html)
             print("get postdata json", postdata)
             res = self.session.post(host+"filemoreajax.php", headers=self.headers, data=postdata)
             res_json = res.json()
