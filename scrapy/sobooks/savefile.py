@@ -18,6 +18,8 @@ def testLanzou():
 
 	#lanzou.Download(os.path.join(os.curdir,"test"),"https://sobooks.lanzous.com/iHOaHdcmsyj")
 	#print(lanzou.Download(os.path.join(os.curdir, "test"), "https://sobooks.lanzous.com/b03mtamna"))
+	print(lanzou.Download(os.path.join(os.curdir, "test"), "https://ob1.lanzous.com/icilhdg","109131"))
+
 	#lzy = LanZouCloud()
 	#lzy.down_file_by_url("https://sobooks.lanzous.com/b03mtamna","",os.path.join(os.curdir, "test"))
 	#lzy.down_dir_by_url("https://sobooks.lanzous.com/b03mtamna", "", os.path.join(os.curdir, "test"))
@@ -40,6 +42,7 @@ def startSave():
 			#初始化百度网盘
 			bai_du_pan = BaiDuPan()
 			lanzou = Lanzou()
+			lanzou.log = logging
 			result = bai_du_pan.verifyCookie()
 
 			if (result['errno'] != 0):

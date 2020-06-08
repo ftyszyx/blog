@@ -162,13 +162,18 @@ class Lanzou(object):
         return {'errno': 0}
 
     #获取真实地址
-    def _getFileUrl(self, url):
+    def _getFileUrl(self, url,pwd):
         frameres = self._get(url )
         frameres_page = frameres.content.decode("utf-8")
         frameres_page=clearComment(frameres_page)
         postdata = getPostJson(frameres_page)
         print("postdata", postdata)
         res = self._post(self._host_url + "ajaxm.php",postdata)
+        if '输入密码' in frameres_page:  # 文件设置了提取码时
+            if len(pwd)==0:
+                return None
+            else:
+                postdata["p"]=pwd
         print("get json", res)
         res_json = res.json()
         print("get json:",res_json)
@@ -184,7 +189,7 @@ class Lanzou(object):
         print("direct_url:",direct_url)
         return direct_url
 
-    def Download(self,path,url):
+    def Download(self,path,url,pwd):
         if os.path.exists(path)==False:
             os.mkdir(path)
         self._host_url=re.findall(r'.*lanzous.com\/',url)[0]
@@ -195,7 +200,7 @@ class Lanzou(object):
             filename=res.html.find('title', first=True).text
             filename=filename.replace("- 蓝奏云","")
             framurl =  self._host_url + ifram.attrs["src"]
-            durl=self._getFileUrl(framurl)
+            durl=self._getFileUrl(framurl,pwd)
             if durl is None:
                 return {'errno': 1, "err": "durl获取失败"}
             return self._downloadFile(path,filename,durl)
@@ -203,6 +208,11 @@ class Lanzou(object):
             #是文件夹
             res_html = res.content.decode("utf-8")
             res_html=clearComment(res_html)
+
+            if '文件不存在' in res_html:
+                return {'errno': 1, "err": "文件不存在"}
+            if '请输入密码' in res_html and len(pwd) == 0:
+                return {'errno': 1, "err": "需要密码"}
             #取文件夹名
             dirname=getJsValue(res_html,"document.title")
             dirname=getJsValue(res_html, dirname)
@@ -211,6 +221,8 @@ class Lanzou(object):
                 os.mkdir(savepath)
             postdata=getPostJson(res_html)
             print("get postdata json", postdata)
+            if '请输入密码' in res_html:
+                postdata["pwd"]= pwd
             res = self._post(self._host_url+"filemoreajax.php", postdata)
             res_json = res.json()
             print("get json",res_json)
@@ -227,7 +239,7 @@ class Lanzou(object):
                     return {'errno': 1, "err": "ifran not find"}
                 print("filename",filename)
                 framurl = self._host_url + ifram.attrs["src"]
-                durl=self._getFileUrl(framurl)
+                durl=self._getFileUrl(framurl,pwd)
                 if durl is None:
                     return {'errno': 1, "err": "durl获取失败"}
                 result=self._downloadFile(savepath,filename,durl)
