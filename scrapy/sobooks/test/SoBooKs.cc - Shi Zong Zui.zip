@@ -1,45 +1,102 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
-<title>Error 400</title>
-<link rel="shortcut icon" href="/favicon.ico">
-<style type="text/css">
-<!--
-body{
-	margin: 0px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 14px;
-}
-.cdn3{
-	font-size: 20px;
-	color: #666666;
-	text-align: center;
-}
-.cdn5{
-	margin-right: auto;
-	margin-left: auto;
-    padding: 70px 15px 0 15px;
-}
-#link{background: #0088ff;color: #fff;padding: 10px 30px;border-radius: 3px;text-decoration: none;display: block;width: 100px;margin: 30px auto;}
--->
-</style>
+<script type="text/javascript" src="https://apps.bdimg.com/libs/jquery/1.6.4/jquery.min.js"></script>
 </head>
-<body id="bd">
-<div class="pc"></div>
-<div class="cdn5">
-<div class="cdn3" id="off">错误</div>
-</div>
-<script language="javascript">
-//360mobie跳转错误转换
-var down_url = window.location.href;
-var new_url;
-if(down_url.indexOf("&amp;") > 0){
-	new_url = down_url.replace(new RegExp("&amp;","gm"),"&");
-	document.getElementById("off").innerHTML="点击下面按钮继续完成下载<br><a href="+ new_url +" id=link>继续下载</a>";
+<body>
+<style>
+body{font-size: 16px;margin: 0;font-family: \5FAE\8F6F\96C5\9ED1;}
+#info{text-align: center;display:none}
+.info1{background: #a7d299;width: 70px;height: 77px;border-radius: 50%;padding-left: 17px;padding-right: 13px;padding-top: 23px;margin: auto;margin-top: 10%;}
+.info2{height: 25px;width: 80%;border-bottom: 8px solid #fff;border-left: 8px solid #fff;transform: rotate(-38deg);}
+.info3{padding-top: 30px;padding-bottom: 10px;}
+a{text-decoration: none;}
+.tc2{background: #e45231;color: #fff;display: block;width: 200px;border-radius: 2px;height: 36px;line-height: 36px;margin: auto;margin-top: 20px;}
+.tc2:hover{background: #3e3d3d;}
+.off{text-align: center;font-size: 12px;line-height: 2em;color: #aaa;}
+.off span{color: #923636;font-size: 20px;padding: 3px;}
+.off0{background: #eee;width: 70px;height: 60px;margin: 10% auto 30px auto;border-radius: 3px;padding-top: 10px;}
+.off1{border-top: 30px solid #888;width: 10px;height: 10px;border-bottom: 10px solid #888;margin: auto;}
+#pwdload{background: #fff;box-shadow: 0 1px 1px rgba(0, 0, 0, 0.175);width: 400px;height: 300px;margin: auto;margin-top: 10%;padding: 20px;border-radius: 5px;}
+.title{font-size:22px}
+.txt{padding-top: 20px;line-height: 1.5em;width: 250px;font-size: 14px;color: #888;}
+.input{font-size: 22px;width: 100%;border: 0;border-bottom: 2px solid #0188ff;padding: 5px 0;outline: 0;}
+.input:hover{border-bottom: 2px solid #5cacf3;}
+.input:focus{border-bottom: 2px solid #5cacf3;}
+.btnpwd{background: #0088ff;color: #fff;padding: 10px 20px;border-radius: 2px;display: block;cursor: pointer;float: right;}
+.btnpwd:hover{background: #5cacf3;}
+.box{width: 280px;margin:auto;padding-top: 20px;}
+.left{float: left;}
+.ref{cursor: pointer;color: #0188ff;font-size: 14px;text-align: center;margin-top: 10px;}
+.imcode{margin-top: -50px;float: right;height: 100px;background: #f5f5f5;}
+#img{cursor: pointer;margin-top: 30px;}
+.wxclass{padding-top:20px;color: #888;}
+.cl{clear: both;}
+#pwderr{color: #ff7171;padding-top: 10px;height: 20px;}
+@media (max-width: 768px){
+	#pwdload{    box-shadow: inherit;
+    width: auto;}
+	#pwderr { padding: 15px 0;}
+	.btnpwd{    float: inherit;
+    text-align: center;
+    padding: 10px 0px;
+    width: 100%;}
+	#info{    padding: 20px;}
+	.tc2{width: 100%;}
 }
+</style>
+<div id="pwdload">
+<div class="title">下载文件</div>
+<div class="txt">系统发现您网络不正常，需要验证<br>请输入右边图形中的数字</div>
+<div class="imcode"><img id="img" src="imagecode.php?" onclick="changeCode()"/></div>
+<div class="cl"></div>
+<div class="input_box"><input type="text" name="code" class="input" id="code" value="" /></div>
+<div class="cl"></div>
+<div id="pwderr"></div>
+<div id="sub" onclick="down_r();" class="btnpwd">验证并下载</div>
+</div>
+<div id="info">
+<div class="info1"><div class="info2"></div></div>
+<div class="info3">恭喜你，通过了</div>
+<div class="load" id="go">
+</div>
+</div>
+<script type="text/javascript">
+	$("#code").focus(); 
+	function changeCode(){
+		var img=document.getElementById('img');
+		img.setAttribute('src','imagecode.php?r='+Math.random());
+	}
+	function down_r(){
+		var code = document.getElementById('code').value;
+		$('#sub').val("提交中..."); 
+		$.ajax({
+			type : 'post',
+			url : 'ajax.php',
+			data : { 'file':'AGhXdAsiByMJLFY6C3AHKQQ6VTVQeQM4ATNReVVrUjIHbltoDycOKlRjUWkAelQ2ADUPZ1IiVGZRYAM1AmZRYQAxV2ILNAd8CW1WMAttBzYEcVVgUDkDLgE2UWJVJlJrBzdbPg9iDjtUO1EyAGRUZQA/D2lSP1RgUTADZwI9UTQAYlczCzIHNwluVmMLZwdjBDtVZlA9A2cBMVE2VT1SfQd9W2UPIg5lVHFRcwBpVCYAMA94UnhUElEfA38CMFEGAFlXdAs4ByIJDFZSCwsHfgQqVSFQSgNyAXFRcVVsUm4HNls5D2sOa1Q3UT8AbVRgAGgPPVIrVDRRawNTAjJRNABhV04LAAceCQ1WVQslB2oEC1UyUGgDVAFfURZVYFIVB1ZbaQ8+DhRUblFEAC5UBwAND25SelQlUTEDUAINURoAZFdBC2cHBglpVlYLGwc/BAxVGVB4A0MBZ1EWVV5SZwdBW24PPg4cVGhRUgAXVA8ACA9dUnpUFFEuA0QCNFFkAEpXZQshB2IJbVZDC20HVwQaVRlQTgNeAWVRCFVqUnUHYVtlD28OaFQ2UTYAYVRnAGoPOVI0VHBRJgNsAjpRbQAxVzELZQd+CW5WMAtmBysEbFVjUCIDNAE2UXFVfFIjBzo=','bm':code },
+			dataType : 'json',
+			success:function(msg){
+				if(msg.zt == '1'){
+					document.getElementById("pwdload").style.display="none";
+					document.getElementById("info").style.display="block";
+					$("#go").html("<a href="+ msg.url +"><span class=tc2>立即下载</span></a>");
+
+				}else{
+					$("#pwderr").text(msg.url);
+					$('#sub').val("确认"); 
+					changeCode();
+					$("#code").focus(); 
+				}
+			},
+			error:function(){
+				$("pwderr").text("获取失败，请重试");
+			}
+	
+		});
+	}
 </script>
-<div style="display:none"><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1253610887'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/stat.php%3Fid%3D1253610887' type='text/javascript'%3E%3C/script%3E"));</script></div>
 </body>
+<div style="display:none"><script src="https://s6.cnzz.com/z_stat.php?id=5289169&web_id=5289169" language="JavaScript"></script></div>
 </html>

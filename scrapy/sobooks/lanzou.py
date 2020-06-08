@@ -1,4 +1,5 @@
 from requests_html import HTMLSession
+from random import shuffle, random, uniform
 import re
 import json
 import  os
@@ -48,19 +49,45 @@ def getDictFromJson(html,json):
             else:
                 data[key_str] = getJsValue(html,value_str)
         else:
-            data[key_str]=str(value_str)
+            data[key_str]=value_str.replace("'","")
     return data
 
 class Lanzou(object):
     def __init__(self):
         # 创建session并设置初始登录Cookie
+        self._captcha_handler = None
         self.session = HTMLSession()
         #self.session.cookies['BDUSS'] = 'pSb3VsWW5zSm53ajlCdU9FU2RiYlVqMURYb2wwT2UySHRtN1V1bG5Da1pvd1ZkSVFBQUFBJCQAAAAAAAAAAAEAAABGhdQBZnR5c3p5eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkW3lwZFt5cM1'
         #self.session.cookies['STOKEN'] = '132f5312854e7e3f2493aca33390f2fa657d475beabb9a5e4ef5151b0ce79267'
+        self.session.proxies["http"]= "http://127.0.0.1:8888"
+        self.session.proxies["https"] = "https://127.0.0.1:8888"
+        self.session.verify =False # fiddle抓包
 
         self.headers = {
+            'Accept-Language': 'zh-CN,zh;q=0.9',  # 提取直连必需设置这个，否则拿不到数据
+            'Referer': 'https://www.lanzous.com',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
         }
+
+    def captcha_recognize(self, file_token):
+        """识别下载时弹出的验证码,返回下载直链
+        :param file_token 文件的标识码,每次刷新会变化
+        """
+        if not self._captcha_handler:  # 必需提前设置验证码处理函数
+            print(f"Not set captcha handler function!")
+            return None
+
+        get_img_api = 'https://vip.d0.baidupan.com/file/imagecode.php?r=' + str(random())
+        img_data = self.session.get(get_img_api).content
+        captcha = self._captcha_handler(img_data)  # 用户手动识别验证码
+        post_code_api = 'https://vip.d0.baidupan.com/file/ajax.php'
+        post_data = {'file': file_token, 'bm': captcha}
+        resp = self.session.post(post_code_api, post_data)
+        if not resp or resp.json()['zt'] != 1:
+            print("Captcha ERROR:",captcha)
+            return None
+        print("Captcha PASS:", captcha)
+        return resp.json()['url']
 
     def Download2(self,path,host,ifram):
         framurl = host + ifram.attrs["src"]
@@ -76,7 +103,15 @@ class Lanzou(object):
         print("get json:",res_json)
         download_url = res_json["dom"] + "/file/" + res_json["url"]
         print("download_url:",download_url)
-        res = self.session.get(download_url)
+        res = self.session.get(download_url, allow_redirects=False)
+        res_html = res.content.decode("utf-8")
+        if '网络不正常' in res_html:  # 流量异常，要求输入验证码
+            file_token = re.findall(r"'file':'(.+?)'", res_html)[0]
+            direct_url = self.captcha_recognize(file_token)
+        else:
+            direct_url = res_html.headers['Location']  # 重定向后的真直链
+        #下载
+        res=self.session.get(direct_url)
         dirname=os.path.dirname(path)
         if os.path.exists(dirname)==False:
             os.mkdir(dirname)
