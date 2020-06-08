@@ -41,7 +41,7 @@ class MysqlPipline(object):
                 for row in results:
                     self.all_book_tags[row[1]]=row[0]
                 self.connect.commit()
-                spider.logger.info("get all_book_tags:%s",self.all_book_tags)
+                #spider.logger.info("get all_book_tags:%s",self.all_book_tags)
 
             with self.connect.cursor() as cursor:
                 cursor.execute(""" select * from {} """.format(TABLE_TYPE))
@@ -49,7 +49,7 @@ class MysqlPipline(object):
                 for row in results:
                     self.all_book_types[row[1]]=row[0]
                 self.connect.commit()
-                spider.logger.info("get all_book_types:%s", self.all_book_types)
+                #spider.logger.info("get all_book_types:%s", self.all_book_types)
 
 
     def addOneType(self,item):
@@ -72,7 +72,7 @@ class MysqlPipline(object):
             return url.replace("https://sobooks.cc/go.html?url=","").strip()
         return url
 
-    def addOneBook(self,item):
+    def addOneBook(self,item,spider):
         baiduurl = self.geturl(item.get('baidu_url', ''))
         baidu_code = item.get('baidu_code', '')
         isbn = item.get('isbn', '')
@@ -84,25 +84,28 @@ class MysqlPipline(object):
         desc = item.get('desc', '')
         title=item.get('title','')
         author = item.get('author', '')
+        src=item.get("src","")
         try:
-            with self.connect.cursor() as cursor:
+            with self.connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
                 cursor.execute("""select * from {} where `title`=%s and `author`=%s """.format(TABLE_BOOK), (title,author))
                 # 提交sql语句
                 results = cursor.fetchone()
                 if results is None:
                     cursor.execute(
-                        """insert into {} (title, intro_text, author, type, img, baidu_url, baidu_code,isbn,tags,lanzou_url,chentong_url)
-                        value (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""".format(TABLE_BOOK),
-                        (title, desc,author, typestr, imgstr, baiduurl, baidu_code, isbn, tagstr,
-                         lanzou_url, chentong_url))
+                        """insert into {} (title, intro_text, author, type, img, baidu_url, baidu_code,isbn,tags,lanzou_url,chentong_url,src_url)
+                        value (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""".format(TABLE_BOOK),
+                        (title, desc,author, typestr, imgstr, baiduurl, baidu_code, isbn, tagstr,lanzou_url, chentong_url,src))
+                    spider.logger.info("%s save book item:%s", spider.name, item.get('title', ''))
                 else:
-                    print('book exit')
+
+                    cursor.execute(
+                        """update {} set   baidu_url=%s, baidu_code=%s,lanzou_url=%s,chentong_url=%s,src_url=%s where id=%s""".format(TABLE_BOOK),
+                        ( baiduurl, baidu_code, lanzou_url, chentong_url,src,results["id"]))
+                    spider.logger.info("%s update book item:%s", spider.name, item.get('title', ''))
                 # 提交sql语句
                 self.connect.commit()
-
-                #scrapy.Item.get()
         except Exception as e:
-            print("nysqlerr:",cursor._last_executed)
+            spider.logger.error("sql error:",cursor._last_executed)
             raise scrapy.exceptions.CloseSpider(reason='sqlerr')
 
     #获取tag
@@ -134,8 +137,8 @@ class MysqlPipline(object):
     def process_item(self, item, spider):
 
         if(spider.name=="sobook"):
-            spider.logger.info("%s save book item:%s", spider.name, item.get('title', ''))
-            self.addOneBook(item)
+
+            self.addOneBook(item,spider)
         elif(spider.name=="sotag"):
             tagname=item['name']
             if tagname in self.all_book_tags:

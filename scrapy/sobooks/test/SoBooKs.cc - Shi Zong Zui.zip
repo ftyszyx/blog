@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+<title>Error 400</title>
+<link rel="shortcut icon" href="/favicon.ico">
+<style type="text/css">
+<!--
+body{
+	margin: 0px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+.cdn3{
+	font-size: 20px;
+	color: #666666;
+	text-align: center;
+}
+.cdn5{
+	margin-right: auto;
+	margin-left: auto;
+    padding: 70px 15px 0 15px;
+}
+#link{background: #0088ff;color: #fff;padding: 10px 30px;border-radius: 3px;text-decoration: none;display: block;width: 100px;margin: 30px auto;}
+-->
+</style>
+</head>
+<body id="bd">
+<div class="pc"></div>
+<div class="cdn5">
+<div class="cdn3" id="off">错误</div>
+</div>
+<script language="javascript">
+//360mobie跳转错误转换
+var down_url = window.location.href;
+var new_url;
+if(down_url.indexOf("&amp;") > 0){
+	new_url = down_url.replace(new RegExp("&amp;","gm"),"&");
+	document.getElementById("off").innerHTML="点击下面按钮继续完成下载<br><a href="+ new_url +" id=link>继续下载</a>";
+}
+</script>
+<div style="display:none"><script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1253610887'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/stat.php%3Fid%3D1253610887' type='text/javascript'%3E%3C/script%3E"));</script></div>
+</body>
+</html>
