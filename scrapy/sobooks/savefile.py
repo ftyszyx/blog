@@ -1,8 +1,9 @@
 # coding="utf-8"
 
 from baidu import BaiDuPan
-from lanzou import Lanzou
+from mylanzou import Lanzou
 import pymysql.cursors
+from lanzou2.api import LanZouCloud
 import  os
 TABLE_TAG="book_tags"
 TABLE_TYPE="book_types"
@@ -13,9 +14,13 @@ logging.basicConfig(level=logging.INFO,stream=logfile,format='%(asctime)s - %(le
 
 def testLanzou():
 	lanzou=Lanzou()
+	lanzou.log=logging
 
 	#lanzou.Download(os.path.join(os.curdir,"test"),"https://sobooks.lanzous.com/iHOaHdcmsyj")
-	print(lanzou.Download(os.path.join(os.curdir, "test"), "https://sobooks.lanzous.com/b03mtamna"))
+	#print(lanzou.Download(os.path.join(os.curdir, "test"), "https://sobooks.lanzous.com/b03mtamna"))
+	#lzy = LanZouCloud()
+	#lzy.down_file_by_url("https://sobooks.lanzous.com/b03mtamna","",os.path.join(os.curdir, "test"))
+	#lzy.down_dir_by_url("https://sobooks.lanzous.com/b03mtamna", "", os.path.join(os.curdir, "test"))
 
 def startSave():
 
