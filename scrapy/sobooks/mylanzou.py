@@ -26,11 +26,17 @@ def getPostJson(text):
     postdata = getDictFromJson(text, postdata_str)
     return postdata
 
+def getDataValue(text):
+    find_res = re.search(r'data[\s]*\:[\s]*\'([^,}]*)\'', text)
+    postdata_str = find_res.group(1)
+    return postdata_str
+
 def getJsValue(text,key):
-    regex= re.compile(r"%s[\s]*=[\s]*(\'*[^;\'\}]*\'*);" % key)
+    regex= re.compile(r"%s[\s]*=[\s]*(\'*[^;\'\}\&\;\,]*\'*)" % (key))
     find_res = re.search(regex, text)
     if find_res is None:
         print("key not find:",key,text)
+        return ""
     valuetext=find_res.group(1)
     if valuetext.startswith("'")==False:
         if (is_number(valuetext)):
@@ -50,7 +56,7 @@ def getDictFromJson(html,json):
             if(is_number(item[1])):
                 data[key_str]=int(value_str)
             else:
-                data[key_str] = getJsValue(html,value_str)
+                data[key_str] = getJsValue(html,value_str,'=')
         else:
             data[key_str]=value_str.replace("'","")
     return data
@@ -162,18 +168,24 @@ class Lanzou(object):
         return {'errno': 0}
 
     #获取真实地址
-    def _getFileUrl(self, url,pwd):
-        frameres = self._get(url )
-        frameres_page = frameres.content.decode("utf-8")
+    def _getFileUrl(self, page,pwd):
+        #frameres = self._get(url )
+        frameres_page = page.content.decode("utf-8")
         frameres_page=clearComment(frameres_page)
-        postdata = getPostJson(frameres_page)
+        datastr=getDataValue(frameres_page)
+
+        if '密码' in frameres_page:
+            postdata = {
+                "action": getJsValue(datastr, "action"),
+                "sign": getJsValue(datastr, "sign"),
+                "p": pwd
+            }
+        else:
+            postdata = getPostJson(frameres_page)
+        inf里有名字
         print("postdata", postdata)
         res = self._post(self._host_url + "ajaxm.php",postdata)
-        if '输入密码' in frameres_page:  # 文件设置了提取码时
-            if len(pwd)==0:
-                return None
-            else:
-                postdata["p"]=pwd
+
         print("get json", res)
         res_json = res.json()
         print("get json:",res_json)
@@ -187,7 +199,7 @@ class Lanzou(object):
         else:
             direct_url = res.headers['Location']  # 重定向后的真直链
         print("direct_url:",direct_url)
-        return direct_url
+        return direct_url,
 
     def Download(self,path,url,pwd):
         if os.path.exists(path)==False:
@@ -195,8 +207,20 @@ class Lanzou(object):
         self._host_url=re.findall(r'.*lanzous.com\/',url)[0]
         print("get host:",self._host_url)
         res = self._get(url)
-        ifram = res.html.find('iframe', first=True)
-        if ifram is not None:
+        res_html = res.content.decode("utf-8")
+        res_html = clearComment(res_html)
+        if '密码' in res_html and len(pwd) == 0:
+            return {'errno': 1, "err": "需要密码"}
+        # 取文件夹名
+        dirname = getJsValue(res_html, "document.title")
+        if dirname!="":
+            dirname = getJsValue(res_html, dirname)
+
+        if dirname=="":
+            #文件
+
+            ifram = res.html.find('iframe', first=True)
+
             filename=res.html.find('title', first=True).text
             filename=filename.replace("- 蓝奏云","")
             framurl =  self._host_url + ifram.attrs["src"]
@@ -205,24 +229,15 @@ class Lanzou(object):
                 return {'errno': 1, "err": "durl获取失败"}
             return self._downloadFile(path,filename,durl)
         else:
-            #是文件夹
-            res_html = res.content.decode("utf-8")
-            res_html=clearComment(res_html)
-
-            if '文件不存在' in res_html:
-                return {'errno': 1, "err": "文件不存在"}
-            if '请输入密码' in res_html and len(pwd) == 0:
-                return {'errno': 1, "err": "需要密码"}
-            #取文件夹名
-            dirname=getJsValue(res_html,"document.title")
-            dirname=getJsValue(res_html, dirname)
-            savepath=os.path.join(path,dirname)
-            if os.path.exists(savepath)==False:
+            #文件夹
+            savepath = os.path.join(path, dirname)
+            if os.path.exists(savepath) == False:
                 os.mkdir(savepath)
+            #是文件夹
             postdata=getPostJson(res_html)
             print("get postdata json", postdata)
-            if '请输入密码' in res_html:
-                postdata["pwd"]= pwd
+            if '密码' in res_html:  # 文件设置了提取码时
+                postdata["p"] = pwd
             res = self._post(self._host_url+"filemoreajax.php", postdata)
             res_json = res.json()
             print("get json",res_json)

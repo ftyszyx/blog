@@ -1146,6 +1146,12 @@ class LanZouCloud(object):
             os.remove(record_file)
         return LanZouCloud.SUCCESS
 
+    def down_by_url(self,share_url, dir_pwd='', save_path='./Download'):
+        if is_folder_url(share_url):
+            self.down_dir_by_url(self,share_url,dir_pwd,save_path)
+        else:
+            self.down_file_by_url(self,share_url,dir_pwd,save_path)
+
     def down_dir_by_url(self, share_url, dir_pwd='', save_path='./Download', *, callback=None, mkdir=True,
                         failed_callback=None) -> int:
         """通过分享链接下载文件夹

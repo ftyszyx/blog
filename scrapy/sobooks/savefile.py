@@ -16,11 +16,23 @@ def testLanzou():
 	lanzou=Lanzou()
 	lanzou.log=logging
 
+	#文件（不要密码）
+	lanzou.Download(os.path.join(os.curdir,"test"),"https://wws.lanzous.com/iu3RBdj33eh")
+	# 文件夹（不要密码）
+	lanzou.Download(os.path.join(os.curdir, "test"), "https://wws.lanzous.com/b01bgsveh")
+
+	# 文件
+	lanzou.Download(os.path.join(os.curdir, "test"), "https://wws.lanzous.com/iMPDUdj38xg","38t0")
+	# 文件夹
+	lanzou.Download(os.path.join(os.curdir, "test"), "https://wws.lanzous.com/b01bgsvdg","e3oz")
+
 	#lanzou.Download(os.path.join(os.curdir,"test"),"https://sobooks.lanzous.com/iHOaHdcmsyj")
 	#print(lanzou.Download(os.path.join(os.curdir, "test"), "https://sobooks.lanzous.com/b03mtamna"))
-	print(lanzou.Download(os.path.join(os.curdir, "test"), "https://ob1.lanzous.com/icilhdg","109131"))
+	#print(lanzou.Download(os.path.join(os.curdir, "test"), "https://ob1.lanzous.com/icilhdg","109131"))
 
 	#lzy = LanZouCloud()
+	#lzy.down_by_url("https://ob1.lanzous.com/icilhdg", "109131", os.path.join(os.curdir, "test" ))
+
 	#lzy.down_file_by_url("https://sobooks.lanzous.com/b03mtamna","",os.path.join(os.curdir, "test"))
 	#lzy.down_dir_by_url("https://sobooks.lanzous.com/b03mtamna", "", os.path.join(os.curdir, "test"))
 
