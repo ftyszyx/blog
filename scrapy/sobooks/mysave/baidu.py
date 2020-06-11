@@ -1,38 +1,19 @@
 # coding="utf-8"
 
-from requests_html import HTMLSession
+from mysave.my_request import MyRequest
 import re
 import json
 import time
-import logging
-class BaiDuPan(object):
+class BaiDuPan(MyRequest):
     def __init__(self):
         # 创建session并设置初始登录Cookie
-        self.session = HTMLSession()
         self.session.cookies['BDUSS'] = 'pSb3VsWW5zSm53ajlCdU9FU2RiYlVqMURYb2wwT2UySHRtN1V1bG5Da1pvd1ZkSVFBQUFBJCQAAAAAAAAAAAEAAABGhdQBZnR5c3p5eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkW3lwZFt5cM1'
         self.session.cookies['STOKEN'] = '132f5312854e7e3f2493aca33390f2fa657d475beabb9a5e4ef5151b0ce79267'
-        self.session.verify = False  # fiddle抓包
+
         self.headers = {
             'Host': 'pan.baidu.com',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
         }
-
-    def _get(self, url, **kwargs):
-        try:
-            kwargs.setdefault('headers', self.headers)
-            return self.session.get(url,  **kwargs)
-        except Exception as e:
-            logging.error("error:%s\n stack:%s",e,repr(e))
-            return None
-    #post
-    def _post(self, url, data, **kwargs):
-        try:
-            kwargs.setdefault('headers', self.headers)
-            return self.session.post(url, data,  **kwargs)
-        except Exception as e:
-            logging.error("error:%s\n stack:%s", e, repr(e))
-            return None
-
     '''
     验证Cookie是否已登录
     返回值errno代表的意思：
