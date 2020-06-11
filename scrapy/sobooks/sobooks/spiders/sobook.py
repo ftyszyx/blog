@@ -61,7 +61,7 @@ class authorspider(scrapy.Spider):
 
     def parse_page(self,response):
         booitem = BooksItem()
-        booktype = response.css('li.current-menu-item a::text').get()
+        booktype = response.css('li.current-menu-parent a::text').get()
         bookinfo=response.css('div.book-info')
 
         booitem["img"] = bookinfo.css('div.bookpic img::attr(src)').get()

@@ -1,7 +1,7 @@
 from mysave.my_request import MyRequest
 import re
 import  os
-import mysave
+import mysave.my_help as myhelp
 
 
 class Lanzou(MyRequest):
@@ -15,7 +15,7 @@ class Lanzou(MyRequest):
     #解析文件页
     def _prase_page(self, page,savepath,pwd=""):
         page_html = page.content.decode("utf-8")
-        page_html=mysave.clearComment(page_html)
+        page_html=myhelp.clearComment(page_html)
         passflag=False
         if '密码' in page_html:
             passflag = True
@@ -31,13 +31,13 @@ class Lanzou(MyRequest):
             framurl = self._host_url + ifram.attrs["src"]
             frameres = self._get(framurl)
             page_html = frameres.content.decode("utf-8")
-            page_html = mysave.clearComment(page_html)
-            postdata = mysave.getPostJson(page_html)
+            page_html = myhelp.clearComment(page_html)
+            postdata = myhelp.getPostJson(page_html)
         else:
-            datastr = mysave.getDataValue(page_html)
+            datastr = myhelp.getDataValue(page_html)
             postdata = {
-                "action": mysave.getJsValue(datastr, "action"),
-                "sign": mysave.getJsValue(datastr, "sign"),
+                "action": myhelp.getJsValue(datastr, "action"),
+                "sign": myhelp.getJsValue(datastr, "sign"),
                 "p": pwd
             }
 
@@ -71,13 +71,13 @@ class Lanzou(MyRequest):
             os.mkdir(path)
         res = self._get(url)
         res_html = res.content.decode("utf-8")
-        res_html = mysave.clearComment(res_html)
+        res_html = myhelp.clearComment(res_html)
         if '密码' in res_html and len(pwd) == 0:
             return {'errno': 1, "err": "需要密码"}
         # 取文件夹名
-        dirname = mysave.getJsValue(res_html, "document.title")
+        dirname = myhelp.getJsValue(res_html, "document.title")
         if dirname!="":
-            dirname = mysave.getJsValue(res_html, dirname)
+            dirname = myhelp.getJsValue(res_html, dirname)
 
         if dirname=="":
             #文件
@@ -90,7 +90,7 @@ class Lanzou(MyRequest):
             if os.path.exists(savepath) == False:
                 os.mkdir(savepath)
             #是文件夹
-            postdata=mysave.getPostJson(res_html)
+            postdata=myhelp.getPostJson(res_html)
             print("get postdata json", postdata)
             if '密码' in res_html:  # 文件设置了提取码时
                 postdata["pwd"] = pwd

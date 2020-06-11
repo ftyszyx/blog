@@ -57,3 +57,11 @@ def getDictFromJson(html,json):
             data[key_str]=value_str.replace("'","")
     return data
 
+def newError(msg="",data={}):
+    if msg=="":
+        return {'errno': 0, "msg":msg,"data":data}
+    else:
+        return {'errno': 1, "msg": msg, "data": data}
+
+def newSuccess():
+    return {'errno': 0, "msg": "", "data": {}}

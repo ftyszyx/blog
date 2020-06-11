@@ -3,6 +3,7 @@ import os
 
 from mysave.baidu import BaiDuPan
 from mysave.mylanzou import Lanzou
+from mysave.chentong import Chentong
 import pymysql.cursors
 import logging
 
@@ -37,7 +38,7 @@ class Mysave(object):
 
             self.bai_du_pan = BaiDuPan()
             self.lanzou = Lanzou()
-            self.lanzou.log = logging
+            self.chentong=Chentong()
             result =  self.bai_du_pan.verifyCookie()
             if (result['errno'] != 0):
                 logging.error("baidu link error:%s", result)
@@ -89,13 +90,15 @@ class Mysave(object):
             baiduurl = item["baidu_url"]
             baiducode = item["baidu_code"]
             typename = self.all_book_types[item["type"]]
-            bookname = item["title"]
             chentongurl = item["chentong_url"]
             lanzou_url = item["lanzou_url"]
             if lanzou_url != "" :
                 res = self.saveLanzou(os.path.join(os.curdir, typename), lanzou_url)
-            if chentongurl != "" and (".lanzous.com" in chentongurl) and res==False:
-                res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl)
+            if chentongurl != "" and res==False:
+                if  ".lanzous.com" in chentongurl:
+                    res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl)
+                else:
+                    res = self.saveChenTong(os.path.join(os.curdir, typename), chentongurl)
             if baiduurl != "" and res==False :
                 res = self.saveBaidu('/sobooks/' + typename, baiduurl, baiducode)
         except Exception as e:
@@ -118,4 +121,13 @@ class Mysave(object):
             return True
         else:
             logging.info('百度保存失败:path:%s url:%s err:%s', path, url,res)
+            return False
+
+    def saveChenTong(self,path,url):
+        res =  self.chentong.download( path,url)
+        if (res['errno'] == 0):
+            logging.info('城通保存成功:path:%s url:%s', path, url)
+            return True
+        else:
+            logging.info('城通保存失败:path:%s url:%s err:%s', path, url,res)
             return False
