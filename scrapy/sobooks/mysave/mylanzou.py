@@ -6,6 +6,7 @@ import mysave.my_help as myhelp
 
 class Lanzou(MyRequest):
     def __init__(self):
+        super(Lanzou, self).__init__()
         # 创建session并设置初始登录Cookie
         self.headers = {
             'Referer': 'https://www.lanzous.com', #这个必须
@@ -111,3 +112,22 @@ class Lanzou(MyRequest):
         self._host_url = re.findall(r'.*lanzous.com\/', url)[0]
         print("get host:", self._host_url)
         return self._prase(path, url, pwd)
+
+
+
+def testLanzou():
+    lanzou=Lanzou()
+
+    #文件（不要密码）
+    lanzou.Download(os.path.join(os.curdir, "test"), "https://wws.lanzous.com/iY1rEdjrw4f")
+    # lanzou.Download(os.path.join(os.curdir,"test"),"https://wws.lanzous.com/iu3RBdj33eh")
+    # 文件夹（不要密码）
+    #lanzou.Download(os.path.join(os.curdir, "test"), "https://wws.lanzous.com/b01bgsveh")
+
+    # 文件(要密码）
+    #lanzou.Download(os.path.join(os.curdir, "test"), "https://wws.lanzous.com/iMPDUdj38xg","38t0")
+    #文件夹(要密码）
+    #res=lanzou.Download(os.path.join(os.curdir, "test"), "https://wws.lanzous.com/b01bgsvdg","e3oz")
+    # if res["errno"]!=0:
+    # 	msg = traceback.format_exc()  # 方式1
+    # 	print(msg)

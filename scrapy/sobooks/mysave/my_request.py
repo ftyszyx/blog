@@ -23,8 +23,7 @@ class MyRequest():
         try:
             kwargs.setdefault('headers', self.headers)
             return self.session.get(url, **kwargs)
-        except Exception as e:
-            logging.error("error:%s\n stack:%s", e, repr(e))
+        except:
             return None
 
     # post
@@ -32,8 +31,7 @@ class MyRequest():
         try:
             kwargs.setdefault('headers', self.headers)
             return self.session.post(url, data, **kwargs)
-        except Exception as e:
-            logging.error("error:%s\n stack:%s", e, repr(e))
+        except:
             return None
 
     def un_serialize(self, data: bytes):
@@ -44,7 +42,7 @@ class MyRequest():
                 return None
             return ret
         except Exception as e:  # 这里可能会丢奇怪的异常
-            logging.error("error:%s\n stack:%s", e, repr(e))
+            logging.exception(e)
             return None
 
     # 验证码识别

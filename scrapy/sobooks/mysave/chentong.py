@@ -6,6 +6,7 @@ from mysave.my_request import MyRequest
 #城通下文件有限制，每次只能下一个
 class Chentong(MyRequest):
     def __init__(self):
+        super(Chentong, self).__init__()
         # 创建session并设置初始登录Cookie
         self.headers = {
             'Accept-Language': 'zh-CN,zh;q=0.9',  # 提取直连必需设置这个，否则拿不到数据

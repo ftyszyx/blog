@@ -6,6 +6,7 @@ from mysave.mylanzou import Lanzou
 from mysave.chentong import Chentong
 import pymysql.cursors
 import logging
+import mysave.my_help as myhelp
 
 TABLE_TAG="book_tags"
 TABLE_TYPE="book_types"
@@ -14,6 +15,9 @@ class Mysave(object):
     all_book_tags = {}
     all_book_types = {}
     def __init__(self):
+        return
+
+    def int(self):
         try:
             self.connect = pymysql.connect(
                 host='127.0.0.1',  # 数据库地址
@@ -42,11 +46,14 @@ class Mysave(object):
             result =  self.bai_du_pan.verifyCookie()
             if (result['errno'] != 0):
                 logging.error("baidu link error:%s", result)
-                return
+                return result
         except Exception as e:
             if self.cursor is not None and hasattr(self.cursor, "_last_executed"):
                 logging.error("nysqlerr:%s", self.cursor._last_executed)
-            logging.error("error:%s\n stack:%s", e, repr(e))
+            logging.exception(e)
+            return myhelp.newError("错误")
+        return myhelp.newSuccess()
+
 
     def getallItem(self):
         try:
@@ -67,7 +74,7 @@ class Mysave(object):
         except Exception as e:
             if self.cursor is not None and hasattr(self.cursor, "_last_executed"):
                 logging.error("nysqlerr:%s", self.cursor._last_executed)
-            logging.error("error:%s\n stack:%s", e, repr(e))
+            logging.exception(e)
 
     def save(self):
         item_itr=self.getallItem()
@@ -81,11 +88,12 @@ class Mysave(object):
                         cursor.execute(""" update {} set `saveok`=1 where `id`=%s """.format(TABLE_BOOK), item["id"])
                         self.connect.commit()
         except Exception as e:
-            logging.error("error:%s\n stack:%s", e, repr(e))
+            logging.exception(e)
             return
 
 
     def processitem(self,item):
+        res=False
         try:
             baiduurl = item["baidu_url"]
             baiducode = item["baidu_code"]
@@ -102,7 +110,7 @@ class Mysave(object):
             if baiduurl != "" and res==False :
                 res = self.saveBaidu('/sobooks/' + typename, baiduurl, baiducode)
         except Exception as e:
-            logging.error("error:%s\n stack:%s", e, repr(e))
+            logging.exception(e)
             return False
         return res
 
