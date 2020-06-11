@@ -20,32 +20,23 @@ class MyRequest():
 
     # 请求
     def _get(self, url, **kwargs):
-        try:
-            kwargs.setdefault('headers', self.headers)
-            return self.session.get(url, **kwargs)
-        except:
-            return None
+        kwargs.setdefault('headers', self.headers)
+        return self.session.get(url, **kwargs)
 
     # post
     def _post(self, url, data, **kwargs):
-        try:
-            kwargs.setdefault('headers', self.headers)
-            return self.session.post(url, data, **kwargs)
-        except:
-            return None
+        kwargs.setdefault('headers', self.headers)
+        return self.session.post(url, data, **kwargs)
+
 
     def un_serialize(self, data: bytes):
         """反序列化文件信息数据"""
-        try:
-            ret = pickle.loads(data)
-            if not isinstance(ret, dict):
-                return None
-            return ret
-        except Exception as e:  # 这里可能会丢奇怪的异常
-            logging.exception(e)
+        ret = pickle.loads(data)
+        if not isinstance(ret, dict):
             return None
+        return ret
 
-    # 验证码识别
+        # 验证码识别
     def _captcha_recognize(self, file_token):
         """识别下载时弹出的验证码,返回下载直链
         :param file_token 文件的标识码,每次刷新会变化

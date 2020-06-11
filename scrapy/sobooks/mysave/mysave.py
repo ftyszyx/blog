@@ -56,30 +56,23 @@ class Mysave(object):
 
 
     def getallItem(self):
-        try:
-            with self.connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
-                self.cursor = cursor
-                self.cursor.execute(""" select COUNT(*) from {} where saveok=0""".format(TABLE_BOOK))
-                results = cursor.fetchone()
-                num = int(results["COUNT(*)"])
-                perpagenum = 10
-                page = int(num / perpagenum + 1)
-                for pageindex in range(1,page):
-                    start=(pageindex-1)*perpagenum;
-                    cursor.execute(""" select * from {} where saveok=0 limit {},{} """.format(TABLE_BOOK,start,perpagenum))
-                    results = cursor.fetchall()
-                    for item in results:
-                         yield item
-
-        except Exception as e:
-            if self.cursor is not None and hasattr(self.cursor, "_last_executed"):
-                logging.error("nysqlerr:%s", self.cursor._last_executed)
-            logging.exception(e)
+        self.cursor.execute(""" select COUNT(*) from {} where saveok=0""".format(TABLE_BOOK))
+        results = self.cursor.fetchone()
+        num = int(results["COUNT(*)"])
+        perpagenum = 10
+        page = int(num / perpagenum + 1)
+        for pageindex in range(1,page):
+            start=(pageindex-1)*perpagenum
+            self.cursor.execute(""" select * from {} where saveok=0 limit {},{} """.format(TABLE_BOOK,start,perpagenum))
+            results = self.cursor.fetchall()
+            for item in results:
+                 yield item
 
     def save(self):
         item_itr=self.getallItem()
         try:
             with self.connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
+                self.cursor = cursor
                 while True:
                     item = next(item_itr, None)
                     if item is None:
@@ -88,30 +81,28 @@ class Mysave(object):
                         cursor.execute(""" update {} set `saveok`=1 where `id`=%s """.format(TABLE_BOOK), item["id"])
                         self.connect.commit()
         except Exception as e:
+            if self.cursor is not None and hasattr(self.cursor, "_last_executed"):
+                logging.error("last sql:%s", self.cursor._last_executed)
             logging.exception(e)
             return
 
 
     def processitem(self,item):
         res=False
-        try:
-            baiduurl = item["baidu_url"]
-            baiducode = item["baidu_code"]
-            typename = self.all_book_types[item["type"]]
-            chentongurl = item["chentong_url"]
-            lanzou_url = item["lanzou_url"]
-            if lanzou_url != "" :
-                res = self.saveLanzou(os.path.join(os.curdir, typename), lanzou_url)
-            if chentongurl != "" and res==False:
-                if  ".lanzous.com" in chentongurl:
-                    res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl)
-                else:
-                    res = self.saveChenTong(os.path.join(os.curdir, typename), chentongurl)
-            if baiduurl != "" and res==False :
-                res = self.saveBaidu('/sobooks/' + typename, baiduurl, baiducode)
-        except Exception as e:
-            logging.exception(e)
-            return False
+        baiduurl = item["baidu_url"]
+        baiducode = item["baidu_code"]
+        typename = self.all_book_types[item["type"]]
+        chentongurl = item["chentong_url"]
+        lanzou_url = item["lanzou_url"]
+        if lanzou_url != "" :
+            res = self.saveLanzou(os.path.join(os.curdir, typename), lanzou_url)
+        if chentongurl != "" and res==False:
+            if  ".lanzous.com" in chentongurl:
+                res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl)
+            else:
+                res = self.saveChenTong(os.path.join(os.curdir, typename), chentongurl)
+        if baiduurl != "" and res==False :
+            res = self.saveBaidu('/sobooks/' + typename, baiduurl, baiducode)
         return res
 
     def saveLanzou(self,path,url,code=""):
