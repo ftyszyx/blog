@@ -22,6 +22,8 @@ class BooksItem(scrapy.Item):
     isbn=scrapy.Field()
     tag=scrapy.Field()
     src=scrapy.Field()
+    lanzou_code=scrapy.Field()
+    chentong_code=scrapy.Field()
 
     pass
 

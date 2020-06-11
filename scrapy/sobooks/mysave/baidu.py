@@ -4,18 +4,34 @@ from requests_html import HTMLSession
 import re
 import json
 import time
-
+import logging
 class BaiDuPan(object):
     def __init__(self):
         # 创建session并设置初始登录Cookie
         self.session = HTMLSession()
         self.session.cookies['BDUSS'] = 'pSb3VsWW5zSm53ajlCdU9FU2RiYlVqMURYb2wwT2UySHRtN1V1bG5Da1pvd1ZkSVFBQUFBJCQAAAAAAAAAAAEAAABGhdQBZnR5c3p5eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkW3lwZFt5cM1'
         self.session.cookies['STOKEN'] = '132f5312854e7e3f2493aca33390f2fa657d475beabb9a5e4ef5151b0ce79267'
-
+        self.session.verify = False  # fiddle抓包
         self.headers = {
             'Host': 'pan.baidu.com',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
         }
+
+    def _get(self, url, **kwargs):
+        try:
+            kwargs.setdefault('headers', self.headers)
+            return self.session.get(url,  **kwargs)
+        except Exception as e:
+            logging.error("error:%s\n stack:%s",e,repr(e))
+            return None
+    #post
+    def _post(self, url, data, **kwargs):
+        try:
+            kwargs.setdefault('headers', self.headers)
+            return self.session.post(url, data,  **kwargs)
+        except Exception as e:
+            logging.error("error:%s\n stack:%s", e, repr(e))
+            return None
 
     '''
     验证Cookie是否已登录
@@ -27,7 +43,7 @@ class BaiDuPan(object):
         if (self.session.cookies['BDUSS'] == '' or self.session.cookies['STOKEN'] == ''):
             return {'errno': 1, 'err_msg': '请在init方法中配置百度网盘登录Cookie'}
         else:
-            response = self.session.get('https://pan.baidu.com/disk/home?', headers=self.headers)
+            response = self._get('https://pan.baidu.com/disk/home?')
             html=response.content.decode("utf-8")
             username_re=re.findall(r'username\":\"([^\"]+)\"', html)
             user_name = username_re[0]
@@ -65,7 +81,7 @@ class BaiDuPan(object):
         }
         headers = self.headers
         headers['referer'] = referer
-        verify_res = self.session.post(url, headers=headers, data=form_data)
+        verify_res = self._post(url, headers=headers, data=form_data)
         verify_json = verify_res.json()
         errcode=verify_json['errno']
         if (errcode == 0):
@@ -82,7 +98,7 @@ class BaiDuPan(object):
     '''
 
     def saveShare(self, url, pwd=None, path='/'):
-        share_res = self.session.get(url, headers=self.headers)
+        share_res = self._get(url)
         share_page = share_res.content.decode("utf-8")
         if ('error/404.html' in share_res.url):
             return {"errno": 1, "err":"无效的分享链接"}
@@ -111,7 +127,7 @@ class BaiDuPan(object):
                 return {"errno": verify_result['errno'], "err": verify_result }
             else:
                 # 加密分享验证通过后，使用全局session刷新页面（全局session中带有解密的Cookie）
-                share_res = self.session.get(url, headers=self.headers)
+                share_res = self._get(url)
                 share_page = share_res.content.decode("utf-8")
         share_data = json.loads(re.search("yunData.setData\(({.*})\)", share_page).group(1))
         bdstoken = share_data['bdstoken']
@@ -136,7 +152,7 @@ class BaiDuPan(object):
         如果有同名文件，保存的时候会自动重命名：类似xxx(1)
         暂时不支持超过文件数量的文件保存
         '''
-        save_res = self.session.post(save_url, headers=headers, data=form_data)
+        save_res = self._post(save_url, headers=headers, data=form_data)
         save_json = save_res.json()
         errno=save_json['errno']
         if errno==0:

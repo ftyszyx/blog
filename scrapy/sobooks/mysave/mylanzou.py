@@ -35,7 +35,7 @@ def getJsValue(text,key):
     regex= re.compile(r"%s[\s]*=[\s]*(\'*[^;\'\}\&\;\,]*\'*)" % (key))
     find_res = re.search(regex, text)
     if find_res is None:
-        print("key not find:",key,text)
+        #print("key not find:",key,text)
         return ""
     valuetext=find_res.group(1)
     if valuetext.startswith("'")==False:
@@ -56,7 +56,7 @@ def getDictFromJson(html,json):
             if(is_number(item[1])):
                 data[key_str]=int(value_str)
             else:
-                data[key_str] = getJsValue(html,value_str,'=')
+                data[key_str] = getJsValue(html,value_str)
         else:
             data[key_str]=value_str.replace("'","")
     return data
@@ -77,6 +77,7 @@ class Lanzou(object):
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36',
         }
 
+    #请求
     def _get(self, url, **kwargs):
         try:
             kwargs.setdefault('headers', self.headers)
@@ -84,7 +85,7 @@ class Lanzou(object):
         except Exception as e:
             self.log.error("error:%s\n stack:%s",e,repr(e))
             return None
-
+    #post
     def _post(self, url, data, **kwargs):
         try:
             kwargs.setdefault('headers', self.headers)
@@ -125,6 +126,7 @@ class Lanzou(object):
         print("Captcha PASS:", captcha)
         return resp.json()['url']
 
+    #下载文件
     def _downloadFile(self,save_path,filename,durl):
         resp = self._get(durl, stream=True)
         if not resp:
@@ -167,28 +169,43 @@ class Lanzou(object):
                 f.truncate()
         return {'errno': 0}
 
-    #获取真实地址
-    def _getFileUrl(self, page,pwd):
-        #frameres = self._get(url )
-        frameres_page = page.content.decode("utf-8")
-        frameres_page=clearComment(frameres_page)
-        datastr=getDataValue(frameres_page)
-
-        if '密码' in frameres_page:
+    #解析文件页
+    def PraseFilePage(self, page,savepath,pwd=""):
+        page_html = page.content.decode("utf-8")
+        page_html=clearComment(page_html)
+        passflag=False
+        if '密码' in page_html:
+            passflag = True
+        if passflag==False:
+            ifram = page.html.find('iframe', first=True)
+            filename = re.search(r"<title>(.+?) - 蓝奏云</title>", page_html) or \
+                     re.search(r'<div class="filethetext".+?>([^<>]+?)</div>', page_html) or \
+                     re.search(r'<div style="font-size.+?>([^<>].+?)</div>', page_html) or \
+                     re.search(r"var filename = '(.+?)';", page_html) or \
+                     re.search(r'id="filenajax">(.+?)</div>', page_html) or \
+                     re.search(r'<div class="b"><span>([^<>]+?)</span></div>', page_html)
+            filename = filename.group(1) if filename else "未匹配到文件名"
+            framurl = self._host_url + ifram.attrs["src"]
+            frameres = self._get(framurl)
+            page_html = frameres.content.decode("utf-8")
+            page_html = clearComment(page_html)
+            postdata = getPostJson(page_html)
+        else:
+            datastr = getDataValue(page_html)
             postdata = {
                 "action": getJsValue(datastr, "action"),
                 "sign": getJsValue(datastr, "sign"),
                 "p": pwd
             }
-        else:
-            postdata = getPostJson(frameres_page)
-        inf里有名字
+
         print("postdata", postdata)
         res = self._post(self._host_url + "ajaxm.php",postdata)
 
         print("get json", res)
         res_json = res.json()
         print("get json:",res_json)
+        if passflag == True:
+            filename=res_json["inf"]
         download_url = res_json["dom"] + "/file/" + res_json["url"]
         res = self._get(download_url,allow_redirects=False)
         res_html = res.content.decode("utf-8")
@@ -199,13 +216,16 @@ class Lanzou(object):
         else:
             direct_url = res.headers['Location']  # 重定向后的真直链
         print("direct_url:",direct_url)
-        return direct_url,
+        if direct_url=="":
+            return {'errno': 1, "err": "direct_url获取失败"}
+        return self._downloadFile(savepath, filename, direct_url)
 
-    def Download(self,path,url,pwd):
+
+
+    #解析
+    def _prase(self,path,url,pwd=""):
         if os.path.exists(path)==False:
             os.mkdir(path)
-        self._host_url=re.findall(r'.*lanzous.com\/',url)[0]
-        print("get host:",self._host_url)
         res = self._get(url)
         res_html = res.content.decode("utf-8")
         res_html = clearComment(res_html)
@@ -218,16 +238,9 @@ class Lanzou(object):
 
         if dirname=="":
             #文件
-
-            ifram = res.html.find('iframe', first=True)
-
-            filename=res.html.find('title', first=True).text
-            filename=filename.replace("- 蓝奏云","")
-            framurl =  self._host_url + ifram.attrs["src"]
-            durl=self._getFileUrl(framurl,pwd)
-            if durl is None:
-                return {'errno': 1, "err": "durl获取失败"}
-            return self._downloadFile(path,filename,durl)
+            result=self.PraseFilePage(res,path,pwd)
+            if result["errno"] != 0:
+                return result
         else:
             #文件夹
             savepath = os.path.join(path, dirname)
@@ -237,7 +250,7 @@ class Lanzou(object):
             postdata=getPostJson(res_html)
             print("get postdata json", postdata)
             if '密码' in res_html:  # 文件设置了提取码时
-                postdata["p"] = pwd
+                postdata["pwd"] = pwd
             res = self._post(self._host_url+"filemoreajax.php", postdata)
             res_json = res.json()
             print("get json",res_json)
@@ -246,18 +259,12 @@ class Lanzou(object):
                 return {'errno': 1, "err": infores}
             for item in res_json["text"]:
                 id=item["id"]
-                res=self._get(self._host_url + id)
-                ifram=res.html.find('iframe',first=True)
-                filename = res.html.find('title', first=True).text
-                filename = filename.replace("- 蓝奏云", "")
-                if ifram==None:
-                    return {'errno': 1, "err": "ifran not find"}
-                print("filename",filename)
-                framurl = self._host_url + ifram.attrs["src"]
-                durl=self._getFileUrl(framurl,pwd)
-                if durl is None:
-                    return {'errno': 1, "err": "durl获取失败"}
-                result=self._downloadFile(savepath,filename,durl)
+                result=self._prase(savepath, self._host_url + id, pwd)
                 if result["errno"]!=0:
                     return result
         return {'errno': 0}
+
+    def Download(self, path, url, pwd=""):
+        self._host_url = re.findall(r'.*lanzous.com\/', url)[0]
+        print("get host:", self._host_url)
+        return self._prase(path, url, pwd)
