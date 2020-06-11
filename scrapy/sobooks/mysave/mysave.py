@@ -92,12 +92,12 @@ class Mysave(object):
             bookname = item["title"]
             chentongurl = item["chentong_url"]
             lanzou_url = item["lanzou_url"]
-            if baiduurl!="":
-                res =   self.saveBaidu('/sobooks/' + typename,baiduurl,baiducode)
-            if lanzou_url != "" and res==False:
+            if lanzou_url != "" :
                 res = self.saveLanzou(os.path.join(os.curdir, typename), lanzou_url)
             if chentongurl != "" and (".lanzous.com" in chentongurl) and res==False:
                 res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl)
+            if baiduurl != "" and res==False :
+                res = self.saveBaidu('/sobooks/' + typename, baiduurl, baiducode)
         except Exception as e:
             logging.error("error:%s\n stack:%s", e, repr(e))
             return False
