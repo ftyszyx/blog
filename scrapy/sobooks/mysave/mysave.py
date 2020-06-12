@@ -11,9 +11,11 @@ import mysave.my_help as myhelp
 TABLE_TAG="book_tags"
 TABLE_TYPE="book_types"
 TABLE_BOOK="books"
+
 class Mysave(object):
     all_book_tags = {}
     all_book_types = {}
+    default_savepath="G:\\book"
     def __init__(self):
         return
 
@@ -110,7 +112,7 @@ class Mysave(object):
         lanzou_url = item["lanzou_url"]
         bookname=item["title"]
         if lanzou_url != "" :
-            res = self.saveLanzou(os.path.join(os.curdir, typename), lanzou_url,bookname,"")
+            res = self.saveLanzou(os.path.join(self.default_savepath, typename), lanzou_url,bookname,"")
         if chentongurl != "" and res==False:
             if  ".lanzous.com" in chentongurl:
                 res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl,bookname,"")
