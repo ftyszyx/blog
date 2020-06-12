@@ -119,9 +119,9 @@ class Mysave(object):
             res = self.saveLanzou(os.path.join(self.default_savepath, typename), lanzou_url,bookname,"")
         if chentongurl != "" and res==False:
             if  ".lanzous.com" in chentongurl:
-                res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl,bookname,"")
+                res = self.saveLanzou(os.path.join(self.default_savepath, typename), chentongurl,bookname,"")
             else:
-                res = self.saveChenTong(os.path.join(os.curdir, typename), chentongurl,bookname)
+                res = self.saveChenTong(os.path.join(self.default_savepath, typename), chentongurl,bookname)
         if baiduurl != "" and res==False :
             res = self.saveBaidu('/sobooks/' + typename, baiduurl,bookname, baiducode)
         return res
