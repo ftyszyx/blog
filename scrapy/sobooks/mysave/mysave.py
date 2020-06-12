@@ -16,7 +16,7 @@ class Mysave(object):
     all_book_tags = {}
     all_book_types = {}
     lastitem=None
-    default_savepath="G:\\book"
+    default_savepath="E:\\book"
     def __init__(self):
         return
 

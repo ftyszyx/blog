@@ -1,6 +1,7 @@
 # coding="utf-8"
 from mysave.mysave import Mysave
 import sys
+import urllib3
 
 import logging
 
@@ -12,6 +13,7 @@ printhandle = logging.StreamHandler(sys.stdout)
 printhandle.setLevel(logging.INFO)
 root.addHandler(printhandle)
 if __name__ == '__main__':
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     save=Mysave()
     res=save.init()
     if res["errno"]==0:
