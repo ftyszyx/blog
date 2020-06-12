@@ -15,6 +15,7 @@ TABLE_BOOK="books"
 class Mysave(object):
     all_book_tags = {}
     all_book_types = {}
+    lastitem=None
     default_savepath="G:\\book"
     def __init__(self):
         return
@@ -58,21 +59,24 @@ class Mysave(object):
         return myhelp.newSuccess()
 
 
-    def getallItem(self,tag):
+    def getallItem(self,tag=None):
 
-        if tag!="":
+        if tag is not None:
             self.cursor.execute(""" select COUNT(*) from {} where saveok=0 and tags like '%{}%' """.format(TABLE_BOOK,tag))
         else:
             self.cursor.execute(
                 """ select COUNT(*) from {} where saveok=0 """.format(TABLE_BOOK))
         results = self.cursor.fetchone()
         num = int(results["COUNT(*)"])
-        logging.info("总数量:%s tag:%s",num,self.all_book_tags[tag])
+        if tag is not None:
+            logging.info("总数量:%s tag:%s",num,self.all_book_tags[tag])
+        else:
+            logging.info("总数量:%s ", num)
         perpagenum = 10
         page = int(num / perpagenum + 1)
         for pageindex in range(1,page):
             start=(pageindex-1)*perpagenum
-            if tag != "":
+            if tag is not None:
                 self.cursor.execute(""" select * from {} where saveok=0 and tags like '%{}%' limit {},{} """.format(TABLE_BOOK,tag,start,perpagenum))
             else:
                 self.cursor.execute(
@@ -81,7 +85,7 @@ class Mysave(object):
             for item in results:
                  yield item
 
-    def save(self,tag):
+    def save(self,tag=None):
         item_itr=self.getallItem(tag)
         try:
             with self.connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
@@ -96,7 +100,7 @@ class Mysave(object):
         except Exception as e:
             if self.cursor is not None and hasattr(self.cursor, "_last_executed"):
                 logging.error("last sql:%s", self.cursor._last_executed)
-            if self.lastitem  is not None:
+            if self.lastitem is not None:
                 self.lastitem["intro_text"]=""
                 logging.info("self.lastitem：%s",self.lastitem )
             logging.exception(e)

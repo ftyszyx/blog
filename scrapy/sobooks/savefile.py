@@ -15,4 +15,4 @@ if __name__ == '__main__':
     save=Mysave()
     res=save.init()
     if res["errno"]==0:
-        save.save(161)
+        save.save()
