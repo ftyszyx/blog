@@ -75,3 +75,8 @@ __pycache__/
 /scrapy/sobooks/test.log
 /scrapy/sobooks/*.log
 /scrapy/sobooks/小说文学
+/scrapy/sobooks/学习教育
+/scrapy/sobooks/历史传记
+/scrapy/sobooks/励志成功
+/scrapy/sobooks/人文社科
+/scrapy/sobooks/小说文学

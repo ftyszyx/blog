@@ -80,6 +80,8 @@ class Chentong(MyRequest):
         filejson = self._get(self._host_url + "/getfile.php?f=" + query +  "&passcode=""&r=" +str(random.random()) + "&ref=",headers=headers)
         filejson = filejson.content.decode("utf-8-sig")
         filejson = json.loads(filejson)
+        if filejson["code"]!=200:
+            return myhelp.newError("json错误",filejson)
         filename = filejson["file_name"]
         file_chk=filejson["file_chk"]
         file_id = filejson["file_id"]

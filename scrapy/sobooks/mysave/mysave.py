@@ -58,14 +58,23 @@ class Mysave(object):
 
     def getallItem(self,tag):
 
-        self.cursor.execute(""" select COUNT(*) from {} where saveok=0 and tags like '%{}%' """.format(TABLE_BOOK,tag))
+        if tag!="":
+            self.cursor.execute(""" select COUNT(*) from {} where saveok=0 and tags like '%{}%' """.format(TABLE_BOOK,tag))
+        else:
+            self.cursor.execute(
+                """ select COUNT(*) from {} where saveok=0 """.format(TABLE_BOOK))
         results = self.cursor.fetchone()
         num = int(results["COUNT(*)"])
+        logging.info("总数量:%s tag:%s",num,self.all_book_tags[tag])
         perpagenum = 10
         page = int(num / perpagenum + 1)
         for pageindex in range(1,page):
             start=(pageindex-1)*perpagenum
-            self.cursor.execute(""" select * from {} where saveok=0 and tags like '%{}%' limit {},{} """.format(TABLE_BOOK,tag,start,perpagenum))
+            if tag != "":
+                self.cursor.execute(""" select * from {} where saveok=0 and tags like '%{}%' limit {},{} """.format(TABLE_BOOK,tag,start,perpagenum))
+            else:
+                self.cursor.execute(
+                    """ select * from {} where saveok=0  limit {},{} """.format(TABLE_BOOK,start, perpagenum))
             results = self.cursor.fetchall()
             for item in results:
                  yield item
@@ -76,15 +85,18 @@ class Mysave(object):
             with self.connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
                 self.cursor = cursor
                 while True:
-                    item = next(item_itr, None)
-                    if item is None:
+                    self.lastitem = next(item_itr, None)
+                    if self.lastitem  is None:
                         return
-                    if self.processitem(item)==True:
-                        cursor.execute(""" update {} set `saveok`=1 where `id`=%s """.format(TABLE_BOOK), item["id"])
+                    if self.processitem(self.lastitem )==True:
+                        cursor.execute(""" update {} set `saveok`=1 where `id`=%s """.format(TABLE_BOOK), self.lastitem ["id"])
                         self.connect.commit()
         except Exception as e:
             if self.cursor is not None and hasattr(self.cursor, "_last_executed"):
                 logging.error("last sql:%s", self.cursor._last_executed)
+            if self.lastitem  is not None:
+                self.lastitem["intro_text"]=""
+                logging.info("self.lastitem：%s",self.lastitem )
             logging.exception(e)
             return
 
