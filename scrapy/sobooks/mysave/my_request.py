@@ -4,12 +4,14 @@ import pickle
 import  os
 import mysave.my_help as myhelp
 import logging
+import wget
 
 class MyRequest():
     def __init__(self):
         # 创建session并设置初始登录Cookie
         self._captcha_handler = None
         self.session = HTMLSession()
+        #self.session.packages.urllib3.disable_warnings()  # 屏蔽掉warnming
         self.session.verify = False  # fiddle抓包
         self._host_url = ""
         self.headers = {
@@ -59,9 +61,18 @@ class MyRequest():
 
     # 下载文件
     def _downloadFile(self, save_path, filename, durl):
+        filepath=os.path.join(save_path,filename)
+        logging.info("filepath:%s url:%s", filepath, durl)
+        if os.path.exists(filepath):
+            os.remove(filepath)
+        res=wget.download(durl,filepath)
+        print("downlode ok:%s",res)
+        return myhelp.newSuccess()
         resp = self._get(durl, stream=True)
         if not resp:
             return myhelp.newError("net err")
+
+
         total_size = int(resp.headers['Content-Length'])
 
         file_path = save_path + os.sep + filename

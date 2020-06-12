@@ -17,7 +17,7 @@ class Mysave(object):
     def __init__(self):
         return
 
-    def int(self):
+    def init(self):
         try:
             self.connect = pymysql.connect(
                 host='127.0.0.1',  # 数据库地址
@@ -39,6 +39,7 @@ class Mysave(object):
                 results = self.cursor.fetchall()
                 for row in results:
                     self.all_book_types[row["id"]] = row["name"]
+                logging.info("all_book_tags:%s",self.all_book_tags)
 
             self.bai_du_pan = BaiDuPan()
             self.lanzou = Lanzou()
@@ -55,21 +56,22 @@ class Mysave(object):
         return myhelp.newSuccess()
 
 
-    def getallItem(self):
-        self.cursor.execute(""" select COUNT(*) from {} where saveok=0""".format(TABLE_BOOK))
+    def getallItem(self,tag):
+
+        self.cursor.execute(""" select COUNT(*) from {} where saveok=0 and tags like '%{}%' """.format(TABLE_BOOK,tag))
         results = self.cursor.fetchone()
         num = int(results["COUNT(*)"])
         perpagenum = 10
         page = int(num / perpagenum + 1)
         for pageindex in range(1,page):
             start=(pageindex-1)*perpagenum
-            self.cursor.execute(""" select * from {} where saveok=0 limit {},{} """.format(TABLE_BOOK,start,perpagenum))
+            self.cursor.execute(""" select * from {} where saveok=0 and tags like '%{}%' limit {},{} """.format(TABLE_BOOK,tag,start,perpagenum))
             results = self.cursor.fetchall()
             for item in results:
                  yield item
 
-    def save(self):
-        item_itr=self.getallItem()
+    def save(self,tag):
+        item_itr=self.getallItem(tag)
         try:
             with self.connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
                 self.cursor = cursor
@@ -94,39 +96,40 @@ class Mysave(object):
         typename = self.all_book_types[item["type"]]
         chentongurl = item["chentong_url"]
         lanzou_url = item["lanzou_url"]
+        bookname=item["title"]
         if lanzou_url != "" :
-            res = self.saveLanzou(os.path.join(os.curdir, typename), lanzou_url)
+            res = self.saveLanzou(os.path.join(os.curdir, typename), lanzou_url,bookname,"")
         if chentongurl != "" and res==False:
             if  ".lanzous.com" in chentongurl:
-                res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl)
+                res = self.saveLanzou(os.path.join(os.curdir, typename), chentongurl,bookname,"")
             else:
-                res = self.saveChenTong(os.path.join(os.curdir, typename), chentongurl)
+                res = self.saveChenTong(os.path.join(os.curdir, typename), chentongurl,bookname)
         if baiduurl != "" and res==False :
-            res = self.saveBaidu('/sobooks/' + typename, baiduurl, baiducode)
+            res = self.saveBaidu('/sobooks/' + typename, baiduurl,bookname, baiducode)
         return res
 
-    def saveLanzou(self,path,url,code=""):
-        res = self.lanzou.Download(path, url,code)
+    def saveLanzou(self,path,url,bookname,code):
+        res = self.lanzou.download(path, url,code)
         if (res['errno'] == 0):
-            logging.info('蓝奏保存成功:path:%s url:%s', path, url)
+            logging.info('蓝奏保存成功:path:%s bookname:%s url:%s', path,bookname, url)
             return True
         else:
-            logging.info('蓝奏保存失败:path:%s url:%s err:%s', path, url,res)
+            logging.info('蓝奏保存失败:path:%s url:%s bookname:%s err:%s', path, bookname,url,res)
             return False
-    def saveBaidu(self,path,url,code):
+    def saveBaidu(self,path,url,bookname,code):
         res = self.bai_du_pan.saveShare(url,code,path)
         if (res['errno'] == 0):
-            logging.info('百度保存成功:path:%s url:%s', path, url)
+            logging.info('百度保存成功:path:%s bookname:%s url:%s', path,bookname, url)
             return True
         else:
-            logging.info('百度保存失败:path:%s url:%s err:%s', path, url,res)
+            logging.info('百度保存失败:path:%s bookname:%s url:%s err:%s', path, bookname,url,res)
             return False
 
-    def saveChenTong(self,path,url):
+    def saveChenTong(self,path,url,bookname):
         res =  self.chentong.download( path,url)
         if (res['errno'] == 0):
-            logging.info('城通保存成功:path:%s url:%s', path, url)
+            logging.info('城通保存成功:path:%s bookname:%s url:%s', path, bookname,url)
             return True
         else:
-            logging.info('城通保存失败:path:%s url:%s err:%s', path, url,res)
+            logging.info('城通保存失败:path:%s bookname:%s url:%s err:%s', path,bookname, url,res)
             return False
