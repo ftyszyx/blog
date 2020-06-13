@@ -5,6 +5,8 @@ from mysave.baidu import BaiDuPan
 from mysave.mylanzou import Lanzou
 from mysave.chentong import Chentong
 import pymysql.cursors
+import requests
+import time
 import logging
 import mysave.my_help as myhelp
 import my_config
@@ -98,7 +100,7 @@ class Mysave(object):
                 self.cursor = cursor
                 while True:
                     self.lastitem = next(item_itr, None)
-                    if self.lastitem  is None:
+                    if self.lastitem is None:
                         return
                     if self.processitem(self.lastitem )==True:
                         cursor.execute(""" update {} set `saveok`=1 where `id`=%s """.format(TABLE_BOOK), self.lastitem ["id"])
@@ -121,16 +123,22 @@ class Mysave(object):
         chentongurl = item["chentong_url"]
         lanzou_url = item["lanzou_url"]
         bookname=item["title"]
-        if lanzou_url != "" :
-            res = self.saveLanzou(os.path.join(self.default_savepath, typename), lanzou_url,bookname,"")
-        if chentongurl != "" and res==False:
-            if  ".lanzous.com" in chentongurl:
-                res = self.saveLanzou(os.path.join(self.default_savepath, typename), chentongurl,bookname,"")
-            else:
-                res = self.saveChenTong(os.path.join(self.default_savepath, typename), chentongurl,bookname)
-        if baiduurl != "" and res==False :
-            res = self.saveBaidu('/sobooks/' + typename, baiduurl,bookname, baiducode)
-        return res
+        try:
+            if lanzou_url != "" :
+                res = self.saveLanzou(os.path.join(self.default_savepath, typename), lanzou_url,bookname,"")
+            if chentongurl != "" and res==False:
+                if  ".lanzous.com" in chentongurl:
+                    res = self.saveLanzou(os.path.join(self.default_savepath, typename), chentongurl,bookname,"")
+                else:
+                    res = self.saveChenTong(os.path.join(self.default_savepath, typename), chentongurl,bookname)
+            if baiduurl != "" and res==False :
+                res = self.saveBaidu('/sobooks/' + typename, baiduurl,bookname, baiducode)
+            return res
+        except requests.exceptions.ConnectionError as e:
+            logging.exception(e)
+            logging.info("#################################\nconnect error,wait for 5s\n#########################")
+            time.sleep(5)
+            return False
 
     def saveLanzou(self,path,url,bookname,code):
         res = self.lanzou.download(path, url,code)
