@@ -42,7 +42,7 @@ class Mysave(object):
                 results = self.cursor.fetchall()
                 for row in results:
                     self.all_book_types[row["id"]] = row["name"]
-                logging.info("all_book_tags:%s",self.all_book_tags)
+                #logging.info("all_book_tags:%s",self.all_book_tags)
 
             self.bai_du_pan = BaiDuPan()
             self.lanzou = Lanzou()
@@ -59,10 +59,13 @@ class Mysave(object):
         return myhelp.newSuccess()
 
 
-    def getallItem(self,tag=None):
+    def getallItem(self,tag=None,book_type=None):
 
         if tag is not None:
             self.cursor.execute(""" select COUNT(*) from {} where saveok=0 and tags like '%{}%' """.format(TABLE_BOOK,tag))
+        elif book_type is not None:
+            self.cursor.execute(
+                    """ select COUNT(*) from {} where saveok=0 and type ={} """.format(TABLE_BOOK, book_type))
         else:
             self.cursor.execute(
                 """ select COUNT(*) from {} where saveok=0 """.format(TABLE_BOOK))
@@ -78,6 +81,9 @@ class Mysave(object):
             start=(pageindex-1)*perpagenum
             if tag is not None:
                 self.cursor.execute(""" select * from {} where saveok=0 and tags like '%{}%' limit {},{} """.format(TABLE_BOOK,tag,start,perpagenum))
+            elif book_type is not None:
+                self.cursor.execute(
+                    """ select  * from {}  where saveok=0 and type ={} limit {},{} """.format(TABLE_BOOK, book_type,start,perpagenum))
             else:
                 self.cursor.execute(
                     """ select * from {} where saveok=0  limit {},{} """.format(TABLE_BOOK,start, perpagenum))
@@ -85,8 +91,8 @@ class Mysave(object):
             for item in results:
                  yield item
 
-    def save(self,tag=None):
-        item_itr=self.getallItem(tag)
+    def save(self,tag=None,book_type=None):
+        item_itr=self.getallItem(tag=tag,book_type=book_type)
         try:
             with self.connect.cursor(cursor=pymysql.cursors.DictCursor) as cursor:
                 self.cursor = cursor
