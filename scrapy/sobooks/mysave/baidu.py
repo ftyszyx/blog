@@ -4,6 +4,8 @@ from mysave.my_request import MyRequest
 import re
 import json
 import time
+import random
+import string
 import my_config
 class BaiDuPan(MyRequest):
     def __init__(self):
@@ -142,3 +144,4 @@ class BaiDuPan(MyRequest):
             return {'errno': errno}
         else:
             return {'errno': errno,"err":save_json}
+ 
