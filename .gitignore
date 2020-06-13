@@ -80,3 +80,5 @@ __pycache__/
 /scrapy/sobooks/励志成功
 /scrapy/sobooks/人文社科
 /scrapy/sobooks/小说文学
+/scrapy/sobooks/config.py
+/scrapy/sobooks/my_config.py

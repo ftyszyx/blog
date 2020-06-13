@@ -4,12 +4,13 @@ from mysave.my_request import MyRequest
 import re
 import json
 import time
+import my_config
 class BaiDuPan(MyRequest):
     def __init__(self):
         super(BaiDuPan,self).__init__()
         # 创建session并设置初始登录Cookie
-        self.session.cookies['BDUSS'] = 'pSb3VsWW5zSm53ajlCdU9FU2RiYlVqMURYb2wwT2UySHRtN1V1bG5Da1pvd1ZkSVFBQUFBJCQAAAAAAAAAAAEAAABGhdQBZnR5c3p5eAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkW3lwZFt5cM1'
-        self.session.cookies['STOKEN'] = '132f5312854e7e3f2493aca33390f2fa657d475beabb9a5e4ef5151b0ce79267'
+        self.session.cookies['BDUSS'] = my_config.baidu["BDUSS"]
+        self.session.cookies['STOKEN'] = my_config.baidu["STOKEN"]
 
         self.headers = {
             'Host': 'pan.baidu.com',

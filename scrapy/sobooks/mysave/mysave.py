@@ -7,7 +7,7 @@ from mysave.chentong import Chentong
 import pymysql.cursors
 import logging
 import mysave.my_help as myhelp
-
+import my_config
 TABLE_TAG="book_tags"
 TABLE_TYPE="book_types"
 TABLE_BOOK="books"
@@ -16,7 +16,7 @@ class Mysave(object):
     all_book_tags = {}
     all_book_types = {}
     lastitem=None
-    default_savepath="E:\\book"
+    default_savepath=my_config.download_path
     def __init__(self):
         return
 
